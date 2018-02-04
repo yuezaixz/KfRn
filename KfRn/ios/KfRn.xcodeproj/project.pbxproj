@@ -605,6 +605,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				A62DE87320274D7400A7481D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1009,6 +1010,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		A62DE87320274D7400A7481D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "INFOPLIST=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\necho \"writing to $INFOPLIST\"\nPLISTCMD=\"Add :SERVER_IP string $(ifconfig | grep 'inet 192' | tail -1 | cut -d \" \" -f 2)\"\necho -n \"$INFOPLIST\" | xargs -0 /usr/libexec/PlistBuddy -c \"$PLISTCMD\" || true\nPLISTCMD=\"Set :SERVER_IP $(ifconfig | grep 'inet 192' | tail -1 | cut -d \" \" -f 2)\"\necho -n \"$INFOPLIST\" | xargs -0 /usr/libexec/PlistBuddy -c \"$PLISTCMD\" || true";
 		};
 /* End PBXShellScriptBuildPhase section */
 
