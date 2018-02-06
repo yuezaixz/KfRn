@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
-    StatusBar,
-    Navigator
+    StatusBar
 } from 'react-native';
+import Navigator from 'react-native-deprecated-custom-components'
 import HomeView from './HomeView';
 import DeviceView from './DeviceView';
 
