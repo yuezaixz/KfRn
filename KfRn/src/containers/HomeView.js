@@ -18,30 +18,30 @@ class HomeView extends Component {
         this.state = {isVisible: true}
     }
     componentDidMount(){
-        this.currentRoute = this.props.navigator.navigationContext.currentRoute;
-        this.bindEvents();
+        // this.currentRoute = this.props.navigator.navigationContext.currentRoute;
+        // this.bindEvents();
 
         //todo: 蓝牙开始搜索
         this.props.actions.startSearchDevice()
     }
     componentWillUnmount(){
-        this.unBindEvents();
+        // this.unBindEvents();
     }
     bindEvents = ()=>{
-        this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-            if (this.currentRoute !== event.data.route) {//切换会当前页面，开始搜索，列表显示
-                this.setState({isVisible: false});
-            }
-        });
-        this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
-            if (this.currentRoute === event.data.route) {
-                this.setState({isVisible: true});
-            }
-        });
+        // this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
+        //     if (this.currentRoute !== event.data.route) {//切换会当前页面，开始搜索，列表显示
+        //         this.setState({isVisible: false});
+        //     }
+        // });
+        // this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
+        //     if (this.currentRoute === event.data.route) {
+        //         this.setState({isVisible: true});
+        //     }
+        // });
     }
     unBindEvents = ()=>{
-        this.willFocusSubscription.remove();
-        this.didFocusSubscription.remove();
+        // this.willFocusSubscription.remove();
+        // this.didFocusSubscription.remove();
     }
     render() {
         return (

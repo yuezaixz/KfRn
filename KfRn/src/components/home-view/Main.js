@@ -14,14 +14,14 @@ import ListItem from './ListItem';
 class Main extends Component {
     renderList  = () =>{
         const { home_data } = this.props;
-        if(!home_data || !home_data.data){ return null}
+        if(!home_data || !home_data.device_list){ return null}
         return home_data.device_list.map((item, idx) => {
             return <ListItem {...this.props}
                              name={item.name}
                              uuid={item.uuid}
                              rssi={item.rssi}
                              data={item}
-                             isLast={idx==todos.length-1}/>;
+                             isLast={idx==home_data.device_list.length-1}/>;
         });
     }
     renderLoading = () => {
