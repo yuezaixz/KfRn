@@ -23,7 +23,7 @@ class HomeView extends Component {
         // this.bindEvents();
 
         //todo: 蓝牙开始搜索
-        this.props.actions.startSearchDevice()
+        setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
     }
     componentWillUnmount(){
         // this.unBindEvents();

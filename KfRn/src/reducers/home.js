@@ -9,8 +9,8 @@ const initialState = {
     writeUUID: '',
     failConnectedMsg: '',
     //测试数据
-    device_list: [{name:'Test1',uuid:'aaaa',rssi:-34},{name:'Test2',uuid:'bbbb',rssi:-48}]
-    // device_list: []
+    // device_list: [{name:'Test1',uuid:'aaaa',rssi:-34},{name:'Test2',uuid:'bbbb',rssi:-48}]
+    device_list: []
 }
 
 export default function home(state = initialState, action) {
@@ -27,7 +27,7 @@ export default function home(state = initialState, action) {
         case types.FAIL_DEVICE_CONNECT:
             return {...state, isConnecting: false, connecting_uuid:'', failConnectedMsg: action.errorMsg};
         case types.UPDATE_DEVICE_LIST:
-            return {...state, device_list: [...state.device_list, ...action.devices]};
+            return {...state, device_list: [...action.devices]};
     }
 
     return state;
