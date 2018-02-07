@@ -9,46 +9,35 @@ import {
 import {
     Header,
     Main,
+    Footer,
 } from '../components/device-view';
 import Actions from '../actions';
 
 class DeviceView extends Component {
     constructor(props){
         super(props);
-        this.state = {isVisible: true}
+    }
+    componentWillMount(){
+        const { params } = this.props.navigation.state;
+        var uuid = params ? params.uuid : null;
+        var name = params ? params.name : null;
+        var serviceUUID = params ? params.serviceUUID : null;
+        var noitfyUUID = params ? params.noitfyUUID : null;
+        var writeUUID = params ? params.writeUUID : null;
+        this.setState({
+            uuid, name, serviceUUID, noitfyUUID, writeUUID
+        });
     }
     componentDidMount(){
-        this.currentRoute = this.props.navigator.navigationContext.currentRoute;
-        this.bindEvents();
-
-        //todo: run gulp before uncomment this
-        //fetch data from server
-        this.props.actions.fetchAllTodos();
-    }
-    componentWillUnmount(){
-        this.unBindEvents();
-    }
-    bindEvents = ()=>{
-        this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-            if (this.currentRoute !== event.data.route) {
-                this.setState({isVisible: false});
-            }
-        });
-        this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
-            if (this.currentRoute === event.data.route) {
-                this.setState({isVisible: true});
-            }
-        });
-    }
-    unBindEvents = ()=>{
-        this.willFocusSubscription.remove();
-        this.didFocusSubscription.remove();
+        console.log('进入设备页面')
+        console.log(this.props)
     }
     render() {
         return (
             <View style={styles.container}>
                 <Header {...this.props}/>
-                <Main {...this.props} isVisible={this.state.isVisible}/>
+                <Main {...this.props}/>
+                <Footer {...this.props}/>
             </View>
         );
     }
@@ -62,7 +51,13 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        todos: state.todos
+        device_data: {...state.device,
+            uuid:state.home.uuid,
+            name:state.home.name,
+            serviceUUID:state.home.serviceUUID,
+            noitfyUUID:state.home.noitfyUUID,
+            writeUUID:state.home.writeUUID
+        }
     };
 }
 

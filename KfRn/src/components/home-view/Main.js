@@ -26,7 +26,19 @@ class Main extends Component {
         });
     }
     renderLoading = () => {
-        if (this.props.home_data.isSearching) {
+        if (this.props.home_data.uuid) {
+            return (
+                <View style={styles.loading}>
+                    <Text style={styles.loadingText}>连接成功</Text>
+                </View>
+            )
+        } else if (this.props.home_data.isConnecting) {
+            return (
+                <View style={styles.loading}>
+                    <Text style={styles.loadingText}>连接中...</Text>
+                </View>
+            )
+        } else if (this.props.home_data.isSearching) {
             return (
                 <View style={styles.loading}>
                     <Text style={styles.loadingText}>搜索中...</Text>
@@ -34,6 +46,17 @@ class Main extends Component {
             )
         }
         return null;
+    }
+    componentDidUpdate () {
+        if (this.props.home_data.uuid) {//连接成功，那就跳转了
+            this.props.navigation.navigate('Device',{
+                uuid: this.props.home_data.uuid,
+                name: this.props.home_data.name,
+                serviceUUID: this.props.home_data.serviceUUID,
+                noitfyUUID: this.props.home_data.noitfyUUID,
+                writeUUID: this.props.home_data.writeUUID
+            })
+        }
     }
     render() {
         return (

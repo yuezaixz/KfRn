@@ -1,5 +1,9 @@
 import * as types from '../constants/ActionTypes';
 
+const initialState = {
+
+}
+
 export default function(state = {index: 0}, action) {
     switch(action.type) {
         case types.DEVICE_DISCONNECT:
@@ -15,11 +19,11 @@ export default function(state = {index: 0}, action) {
         case types.START_READ_BATCH:
             return {...state, isReadingBatch: true};
         case types.READ_BATCH:
-            return {...state, isReadingBatch: false, voltage: action.batch};
+            return {...state, isReadingBatch: false, batch: action.batch};
         case types.START_READ_STEP:
             return {...state, isReadingStep: true};
         case types.READ_STEP:
-            return {...state, isReadingStep: false, voltage: action.step};
+            return {...state, isReadingStep: false, step: action.step};
         case types.START_READ_INSOLE_DATA:
             return {...state, isReadingInsoleData: true};
         case types.STOP_READ_INSOLE_DATA:
