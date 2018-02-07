@@ -2,12 +2,38 @@ import * as types from '../constants/ActionTypes';
 import * as BleUUIDs from '../constants/BleUUIDs';
 import BleManager from 'react-native-ble-manager';
 
+var loopTimer = 0;
+
+function endTimer(){
+    loopTimer && cancelAnimationFrame(loopTimer);
+    loopTimer = null;
+}
+
 export function startSearchDevice() {
+    var lastUpdateTime = 0;
+    var callback = null;
+    function startTimer(cb) {
+        callback = cb
+        loopHandle()
+
+    }
+
+    function loopHandle() {
+        var now = new Date().getTime();
+        if(now-lastUpdateTime>1000*1){
+            lastUpdateTime = now;
+            callback()
+        }
+        loopTimer = requestAnimationFrame(loopHandle);
+    }
+
     return async (dispatch, getState) =>{
         dispatch({type: types.START_SEARCH_DEVICE})
-        BleManager.scan([BleUUIDs.SEARCH_SERVICE_UUID], 3, true).then((results) => {
-            console.log('Scanning...');
-            setTimeout(function () {
+        var now = new Date().getTime();
+        lastUpdateTime = now;
+        startTimer(function () {
+            BleManager.scan([BleUUIDs.SEARCH_SERVICE_UUID], 3, true).then((results) => {
+                console.log('Scanning...');
                 BleManager.getDiscoveredPeripherals([])
                     .then((peripheralsArray) => {
                         var new_list = []
@@ -35,13 +61,14 @@ export function startSearchDevice() {
                         new_list = [...new_list,...current_list]
                         dispatch({type: types.UPDATE_DEVICE_LIST, devices:new_list})
                     });
-            },3000)
+            })
         });
 
     }
 }
 
 export function stopSearchDevice() {
+    endTimer()
     return {type: types.STOP_SEARCH_DEVICE}
 }
 
