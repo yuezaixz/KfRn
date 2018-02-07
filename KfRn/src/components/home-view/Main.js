@@ -19,17 +19,21 @@ class Main extends Component {
             return <ListItem {...this.props}
                              name={item.name}
                              uuid={item.uuid}
+                             key={item.uuid}
                              rssi={item.rssi}
                              data={item}
                              isLast={idx==home_data.device_list.length-1}/>;
         });
     }
     renderLoading = () => {
-        return (
-            <View style={styles.loading}>
-                <Text style={styles.loadingText}>Loading...</Text>
-            </View>
-        )
+        if (this.props.home_data.isSearching) {
+            return (
+                <View style={styles.loading}>
+                    <Text style={styles.loadingText}>搜索中...</Text>
+                </View>
+            )
+        }
+        return null;
     }
     render() {
         return (

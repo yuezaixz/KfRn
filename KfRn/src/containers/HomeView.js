@@ -9,6 +9,7 @@ import {
 import {
     Header,
     Main,
+    Footer,
 } from '../components/home-view';
 import Actions from '../actions';
 
@@ -48,6 +49,7 @@ class HomeView extends Component {
             <View style={styles.container}>
                 <Header {...this.props}/>
                 <Main {...this.props} isVisible={this.state.isVisible}/>
+                <Footer {...this.props}/>
             </View>
         );
     }

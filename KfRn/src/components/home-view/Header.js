@@ -24,15 +24,16 @@ class Header extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        height: 60,
+        paddingTop:20,
+        height: 60
     },
     text: {
-        color: '#fff'
+        color: '#E85613'
     },
     title: {
-        width: width/2,
+        width: width,
         textAlign: 'center',
-        fontSize: 60
+        fontSize: 20
     }
 });
 
