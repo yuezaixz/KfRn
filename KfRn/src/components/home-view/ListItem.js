@@ -12,6 +12,10 @@ import {Theme, BasicStyle} from '../../styles';
 
 class ListItem extends Component {
     handleConnect = ()=>{
+        if (this.props.home_data.isConnecting) {
+            //todo 提示连接中，请稍等
+            return;
+        }
         this.props.actions.startDeviceConnect(this.props.data.uuid);
     }
     render() {
@@ -24,7 +28,7 @@ class ListItem extends Component {
                     onPress={this.handleConnect}>
                     <Text style={BasicStyle.text}>{this.props.data.name}</Text>
                 </TouchableHighlight>
-                <Text style={styles.timer}>{this.props.data.rssi}</Text>
+                <Text style={styles.timer}>{this.props.home_data.isConnecting && this.props.home_data.connecting_uuid==this.props.data.uuid?'连接中':this.props.data.rssi}</Text>
             </View>
         );
     }
