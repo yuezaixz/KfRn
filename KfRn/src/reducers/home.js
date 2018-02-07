@@ -27,7 +27,7 @@ export default function home(state = initialState, action) {
         case types.FAIL_DEVICE_CONNECT:
             return {...state, isConnecting: false, connecting_uuid:'', failConnectedMsg: action.errorMsg};
         case types.UPDATE_DEVICE_LIST:
-            return {...state, device_list: [...state.device_list, ...action.devices]};
+            return {...state, device_list: [...action.devices]};
     }
 
     return state;
