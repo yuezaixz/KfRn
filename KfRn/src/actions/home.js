@@ -1,10 +1,11 @@
 import * as types from '../constants/ActionTypes';
+import * as BleUUIDs from '../constants/BleUUIDs';
 import BleManager from 'react-native-ble-manager';
 
 export function startSearchDevice() {
     return async (dispatch, getState) =>{
         dispatch({type: types.START_SEARCH_DEVICE})
-        BleManager.scan([], 3, true).then((results) => {
+        BleManager.scan([BleUUIDs.SEARCH_SERVICE_UUID], 3, true).then((results) => {
             console.log('Scanning...');
             setTimeout(function () {
                 BleManager.getDiscoveredPeripherals([])
@@ -12,13 +13,13 @@ export function startSearchDevice() {
                         var new_list = []
 
                         var tempState = getState()
-                        var current_list = tempState.device_list || []
+                        var current_list = tempState.home.device_list || []
                         if (peripheralsArray ){
                             for (var i = 0; i < peripheralsArray.length; i++) {
                                 var peripheral = peripheralsArray[i]
                                 var isExit = false;
                                 for (var j = 0; j < current_list.length; j++) {
-                                    var device = current_list[i]
+                                    var device = current_list[j]
                                     if(device.uuid == peripheral.id) {
                                         isExit = true
                                         device.rssi = peripheral.rssi

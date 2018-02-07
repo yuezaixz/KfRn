@@ -9,8 +9,8 @@ const initialState = {
     writeUUID: '',
     failConnectedMsg: '',
     //测试数据
-    device_list: [{name:'Test1',uuid:'aaaa',rssi:-34},{name:'Test2',uuid:'bbbb',rssi:-48}]
-    // device_list: []
+    // device_list: [{name:'Test1',uuid:'aaaa',rssi:-34},{name:'Test2',uuid:'bbbb',rssi:-48}]
+    device_list: []
 }
 
 export default function home(state = initialState, action) {
