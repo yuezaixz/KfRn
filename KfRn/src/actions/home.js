@@ -72,14 +72,44 @@ export function stopSearchDevice() {
     return {type: types.STOP_SEARCH_DEVICE}
 }
 
-export function startDeviceConnect(uuid) {
-    return {type: types.START_DEVICE_CONNECT, uuid}
-}
+export function startDeviceConnect(device) {
+    return async (dispatch, getState) =>{
+        dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid})
+        BleManager.connect(device.uuid)
+            .then(() => {
+                //这里只是连上，还要notify和write
+                BleManager.retrieveServices(device.uuid)
+                    .then((peripheralInfo) => {
+                        console.log('Peripheral info:', peripheralInfo);
+                        var notifyCharacteristic = null
+                        var writeCharacteristic = null
+                        if (peripheralInfo.characteristics) {
+                            for (var i = 0; i < peripheralInfo.characteristics.length; i++) {
+                                var characteristic = peripheralInfo.characteristics[i]
+                                if (characteristic.characteristic == BleUUIDs.PODOON_NOTIFICATION_CHARACTERISTIC_UUID) {
+                                    notifyCharacteristic = characteristic.characteristic
+                                } else if (characteristic.characteristic == BleUUIDs.PODOON_WRITE_CHARACTERISTIC_UUID) {
+                                    writeCharacteristic = characteristic.characteristic
+                                }
+                            }
+                        }
+                        if (notifyCharacteristic && writeCharacteristic) {
+                            dispatch({
+                                type: types.SUCCESS_DEVICE_CONNECT,
+                                uuid: device.uuid,
+                                name: device.name,
+                                serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
+                                noitfyUUID: notifyCharacteristic,
+                                writeUUID: writeCharacteristic})
+                        } else {
+                            dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "鞋垫特征初始化失败"})
+                        }
+                    });
 
-export function successDeviceConnect(uuid, serviceUUID, noitfyUUID, writeUUID) {
-    return {type: types.SUCCESS_DEVICE_CONNECT, uuid, serviceUUID, noitfyUUID, writeUUID}
-}
+            })
+            .catch((error) => {
+                dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
+            });
 
-export function failDeviceConnect(errorMsg) {
-    return {type: types.FAIL_DEVICE_CONNECT, errorMsg}
+    }
 }

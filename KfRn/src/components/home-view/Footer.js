@@ -13,10 +13,8 @@ let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
     handleSearch = ()=>{
-        if (this.props.home_data.isSearching) {
-            this.props.actions.stopSearchDevice();
-        } else {
-            this.props.actions.startSearchDevice();
+        if (!this.props.home_data.isReadingVersion) {
+            this.props.actions.startReadVersion();
         }
     }
     render() {

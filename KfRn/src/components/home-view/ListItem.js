@@ -16,7 +16,8 @@ class ListItem extends Component {
             //todo 提示连接中，请稍等
             return;
         }
-        this.props.actions.startDeviceConnect(this.props.data.uuid);
+        this.props.actions.stopSearchDevice()
+        this.props.actions.startDeviceConnect(this.props.data);
     }
     render() {
         return (

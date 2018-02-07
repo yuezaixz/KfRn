@@ -7,57 +7,50 @@ import {
     TouchableHighlight,
     Dimensions
 } from 'react-native';
+import {Theme} from "../../styles";
 
 let {height, width} = Dimensions.get('window');
 
-class Main extends Component {
-    handleVersion = ()=>{
-        if (this.props.home_data.isSearching) {
-            this.props.actions.stopSearchDevice();
-        }
+class Footer extends Component {
+    handleDisconnect = ()=>{
+        this.props.actions.deviceDisconnect();
     }
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={[styles.text, styles.title]}>
-                    版本：{this.props.device_data.version || '--'}
-                </Text>
-                <View style={styles.shadow_btn}>
+            <TouchableHighlight
+                activeOpacity={Theme.active.opacity}
+                underlayColor='transparent'
+                onPress={this.handleDisconnect}>
+                <View style={styles.container}>
                     <Text style={[styles.text, styles.title]}>
-                        读取
+                        断开连接
                     </Text>
                 </View>
-            </View>
+            </TouchableHighlight>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    shadow_btn: {
-        width: 50,
-        height: 30,
+    container: {
+        width: width,
+        height: 40,
         borderWidth:1,
         borderRadius:10,
         backgroundColor:'#AAAAAA',
         position:'absolute',
-        right:20,
+        bottom:20,
         alignItems:'center',
         justifyContent:'center'
-    },
-    container: {
-        paddingTop:20,
-        height: 60,
-        height:height-100-80,
-        width:width
     },
     text: {
         color: '#E85613'
     },
     title: {
         textAlign: 'center',
-        fontSize: 17,
+        fontSize: 20,
         position:'relative'
     }
 });
 
-export default Main;
+export default Footer;
