@@ -94,13 +94,20 @@ export function startDeviceConnect(device) {
                             }
                         }
                         if (notifyCharacteristic && writeCharacteristic) {
-                            dispatch({
-                                type: types.SUCCESS_DEVICE_CONNECT,
-                                uuid: device.uuid,
-                                name: device.name,
-                                serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
-                                noitfyUUID: notifyCharacteristic,
-                                writeUUID: writeCharacteristic})
+                            BleManager.startNotification(device.uuid, BleUUIDs.PODOON_SERVICE_UUID, notifyCharacteristic)
+                                .then(() => {
+                                    dispatch({
+                                        type: types.SUCCESS_DEVICE_CONNECT,
+                                        uuid: device.uuid,
+                                        name: device.name,
+                                        serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
+                                        noitfyUUID: notifyCharacteristic,
+                                        writeUUID: writeCharacteristic})
+                                })
+                                .catch((error) => {
+                                    dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "startNotification失败"})
+                                });
+
                         } else {
                             dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: "鞋垫特征初始化失败"})
                         }

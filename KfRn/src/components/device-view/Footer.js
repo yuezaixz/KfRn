@@ -13,7 +13,7 @@ let {height, width} = Dimensions.get('window');
 
 class Footer extends Component {
     handleDisconnect = ()=>{
-        this.props.actions.deviceDisconnect();
+        this.props.actions.deviceDisconnect(this.props.device_data.uuid);
     }
     render() {
         return (
