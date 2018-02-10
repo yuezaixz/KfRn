@@ -29,7 +29,7 @@ export default function(state = {index: 0}, action) {
         case types.STOP_READ_INSOLE_DATA:
             return {...state, isReadingInsoleData: false};
         case types.READ_INSOLE_DATA:
-            return {...state, insoleData: insoleData};
+            return {...state, insoleData: insoleData, insoleDataStr: insoleData.join(":")};
     }
 
     return state;

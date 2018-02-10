@@ -19,13 +19,55 @@ class Main extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={[styles.text, styles.title]}>
-                    版本：{this.props.device_data.version || '--'}
-                </Text>
-                <View style={styles.shadow_btn}>
+                <View style={styles.insole_info}>
                     <Text style={[styles.text, styles.title]}>
-                        读取
+                        压力数据：{this.props.device_data.insoleDataStr || '--'}
                     </Text>
+                    <View style={styles.shadow_btn}>
+                        <Text style={[styles.text, styles.title]}>
+                            读取
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.insole_info}>
+                    <Text style={[styles.text, styles.title]}>
+                        版本：{this.props.device_data.version || '--'}
+                    </Text>
+                    <View style={styles.shadow_btn}>
+                        <Text style={[styles.text, styles.title]}>
+                            读取
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.insole_info}>
+                    <Text style={[styles.text, styles.title]}>
+                        批次：{this.props.device_data.batch || '--'}
+                    </Text>
+                    <View style={styles.shadow_btn}>
+                        <Text style={[styles.text, styles.title]}>
+                            读取
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.insole_info}>
+                    <Text style={[styles.text, styles.title]}>
+                        电量：{this.props.device_data.voltage || '--'}
+                    </Text>
+                    <View style={styles.shadow_btn}>
+                        <Text style={[styles.text, styles.title]}>
+                            读取
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.insole_info}>
+                    <Text style={[styles.text, styles.title]}>
+                        步数：{this.props.device_data.step || '--'}
+                    </Text>
+                    <View style={styles.shadow_btn}>
+                        <Text style={[styles.text, styles.title]}>
+                            读取
+                        </Text>
+                    </View>
                 </View>
             </View>
         );
@@ -45,9 +87,11 @@ const styles = StyleSheet.create({
         justifyContent:'center'
     },
     container: {
+        height:height-100-80,
+    },
+    insole_info: {
         paddingTop:20,
         height: 60,
-        height:height-100-80,
         width:width
     },
     text: {

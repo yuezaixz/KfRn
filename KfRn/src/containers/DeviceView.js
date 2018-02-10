@@ -27,6 +27,8 @@ class DeviceView extends Component {
         this.setState({
             uuid, name, serviceUUID, noitfyUUID, writeUUID
         });
+        //先检查电量
+        this.props.actions.startCheckVoltage(uuid, serviceUUID, writeUUID);
     }
     componentDidMount(){
         console.log('进入设备页面')
