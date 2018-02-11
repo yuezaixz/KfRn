@@ -16,6 +16,11 @@ class Main extends Component {
             this.props.actions.stopSearchDevice();
         }
     }
+    componentDidUpdate () {
+        if (!this.props.home_data.uuid) {//断开成功
+            this.props.navigation.goBack()
+        }
+    }
     render() {
         return (
             <View style={styles.container}>
