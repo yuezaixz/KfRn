@@ -26,7 +26,6 @@ function writeData(uuid, serviceUUID, writeUUID, successType, command, func) {
     BleManager.write(uuid, serviceUUID, writeUUID, command)
         .then(() => {
             //todo 写入成功
-            console.log('Write: ' + data);
             if (func) {
                 func()
             }

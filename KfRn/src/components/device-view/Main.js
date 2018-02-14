@@ -7,17 +7,17 @@ import {
     TouchableHighlight,
     Dimensions
 } from 'react-native';
+import {Theme} from "../../styles";
 
 let {height, width} = Dimensions.get('window');
 
 class Main extends Component {
     handleVersion = ()=>{
-        if (this.props.home_data.isSearching) {
-            this.props.actions.stopSearchDevice();
-        }
+        console.log(this.props.device_data)
+        this.props.actions.startReadVersion(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
     }
     componentDidUpdate () {
-        if (!this.props.home_data.uuid) {//断开成功
+        if (!this.props.device_data.uuid) {//断开成功
             this.props.navigation.goBack()
         }
     }
@@ -28,11 +28,18 @@ class Main extends Component {
                     <Text style={[styles.text, styles.title]}>
                         压力数据：{this.props.device_data.insoleDataStr || '--'}
                     </Text>
-                    <View style={styles.shadow_btn}>
-                        <Text style={[styles.text, styles.title]}>
-                            读取
-                        </Text>
-                    </View>
+                    <TouchableHighlight
+                        activeOpacity={Theme.active.opacity}
+                        underlayColor='transparent'
+                        style={styles.shadow_btn}
+                        onPress={this.handleVersion}>
+
+                        <View>
+                            <Text style={[styles.text, styles.title]}>
+                                读取
+                            </Text>
+                        </View>
+                    </TouchableHighlight>
                 </View>
                 <View style={styles.insole_info}>
                     <Text style={[styles.text, styles.title]}>

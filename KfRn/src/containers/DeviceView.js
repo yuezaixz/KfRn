@@ -19,14 +19,16 @@ class DeviceView extends Component {
     }
     componentWillMount(){
         const { params } = this.props.navigation.state;
-        var uuid = params ? params.uuid : null;
-        var name = params ? params.name : null;
-        var serviceUUID = params ? params.serviceUUID : null;
-        var noitfyUUID = params ? params.noitfyUUID : null;
-        var writeUUID = params ? params.writeUUID : null;
-        this.setState({
-            uuid, name, serviceUUID, noitfyUUID, writeUUID
-        });
+        if (params && params.uuid) {
+            var uuid = params ? params.uuid : null;
+            var name = params ? params.name : null;
+            var serviceUUID = params ? params.serviceUUID : null;
+            var noitfyUUID = params ? params.noitfyUUID : null;
+            var writeUUID = params ? params.writeUUID : null;
+            this.setState({
+                uuid, name, serviceUUID, noitfyUUID, writeUUID
+            });
+        }
         //先检查电量
         this.props.actions.startCheckVoltage(uuid, serviceUUID, writeUUID);
     }
