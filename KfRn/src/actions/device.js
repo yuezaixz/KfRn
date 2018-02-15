@@ -6,22 +6,6 @@ import {
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-
-var handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
-//handlerUpdate.remove(); //不移除就会一直占用内存
-
-function handleUpdateValueForCharacteristic(data) {
-    console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
-    var datas = data.value
-    var dataStr = data.text
-    if (datas[0] == 86) {
-        //todo 还要过滤
-        dispatch({type: types.READ_VERSION, version: dataStr})
-    }
-}
-
 function writeData(uuid, serviceUUID, writeUUID, successType, command, func) {
     BleManager.write(uuid, serviceUUID, writeUUID, command)
         .then(() => {
