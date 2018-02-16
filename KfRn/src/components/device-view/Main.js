@@ -21,7 +21,15 @@ let that = null
 
 class Main extends Component {
     handleInsoleDatas = ()=>{
-        this.props.actions.startReadInsoleData(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        if (this.props.device_data.isReadingInsoleData) {
+            this.props.actions.stopReadInsoleData(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+
+            var insole_data = [0,0,0]
+            this.props.actions.readInsoleData(insole_data)
+        } else {
+            this.props.actions.startReadInsoleData(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+        }
+
     }
     handleVersion = ()=>{
         this.props.actions.startReadVersion(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
@@ -51,9 +59,17 @@ class Main extends Component {
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        if (datas[0] == 86) {
-            //todo 还要过滤
-            that.props.actions.readVersion(dataStr)
+        if (datas[0] == 1) {
+            var insole_data = [datas[1],datas[2],datas[3]]
+            that.props.actions.readInsoleData(insole_data)
+        } else if (datas[0] == 86) {
+            that.props.actions.readVersion(dataStr.substring(3))
+        } else if (datas[0] == 66) {
+            that.props.actions.readVoltage(dataStr)
+        } else if (datas[0] == 80 && datas[1] == 78) {
+            that.props.actions.readBatch(dataStr.substring(3))
+        } else if (datas[0] == 68) {
+            that.props.actions.readStep(dataStr.substring(3))
         }
     }
     render() {
@@ -71,7 +87,7 @@ class Main extends Component {
 
                         <View>
                             <Text style={[styles.text, styles.title]}>
-                                读取
+                                {this.props.device_data.isReadingInsoleData?'停止':'开始'}
                             </Text>
                         </View>
                     </TouchableHighlight>

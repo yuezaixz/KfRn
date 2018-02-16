@@ -81,16 +81,18 @@ export function readVoltage(voltage) {
     return {type: types.READ_VOLTAGE, voltage}
 }
 
-export function startReadBatch() {
-    return {type: types.START_READ_BATCH}
+export function startReadBatch(uuid, serviceUUID, writeUUID) {
+    const data = stringToBytes('GS');
+    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_BATCH, data);
 }
 
 export function readBatch(batch) {
     return {type: types.READ_BATCH, batch}
 }
 
-export function startReadStep() {
-    return {type: types.START_READ_STEP}
+export function startReadStep(uuid, serviceUUID, writeUUID) {
+    const data = stringToBytes('W');
+    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_STEP, data);
 }
 
 export function readStep(step) {
