@@ -33,7 +33,7 @@ export function startSearchDevice() {
         var now = new Date().getTime();
         lastUpdateTime = now;
         startTimer(function () {
-            BleManager.scan([Platform.OS === 'android' ? BleUUIDs.SEARCH_ANDROID_SERVICE_UUID : BleUUIDs.SEARCH_IOS_SERVICE_UUID], 5, true).then((results) => {
+            BleManager.scan([Platform.OS === 'android' ? BleUUIDs.SEARCH_ANDROID_SERVICE_UUID : BleUUIDs.SEARCH_IOS_SERVICE_UUID], 0, true).then((results) => {
                 console.log('Scanning...');
                 BleManager.getDiscoveredPeripherals([])
                     .then((peripheralsArray) => {

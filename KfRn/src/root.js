@@ -7,7 +7,7 @@ import BleManager from 'react-native-ble-manager';
 
 class Root extends Component {
     componentWillMount() {
-        BleManager.start({showAlert: false})
+        BleManager.start({showAlert: false, forceLegacy: true})
             .then(() => {
                 // Success code
                 console.log('Module initialized');
