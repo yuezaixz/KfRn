@@ -26,6 +26,7 @@ class HomeView extends Component {
         setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
     }
     componentWillUnmount(){
+        this.props.actions.stopSearchDevice()
         // this.unBindEvents();
     }
     bindEvents = ()=>{

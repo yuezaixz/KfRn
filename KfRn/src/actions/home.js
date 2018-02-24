@@ -1,6 +1,7 @@
 import * as types from '../constants/ActionTypes';
 import * as BleUUIDs from '../constants/BleUUIDs';
 import BleManager from 'react-native-ble-manager';
+import {Platform} from 'react-native';
 
 var loopTimer = 0;
 
@@ -32,7 +33,7 @@ export function startSearchDevice() {
         var now = new Date().getTime();
         lastUpdateTime = now;
         startTimer(function () {
-            BleManager.scan([BleUUIDs.SEARCH_SERVICE_UUID], 3, true).then((results) => {
+            BleManager.scan([Platform.OS === 'android' ? BleUUIDs.SEARCH_ANDROID_SERVICE_UUID : BleUUIDs.SEARCH_IOS_SERVICE_UUID], 5, true).then((results) => {
                 console.log('Scanning...');
                 BleManager.getDiscoveredPeripherals([])
                     .then((peripheralsArray) => {
@@ -69,10 +70,12 @@ export function startSearchDevice() {
 
 export function stopSearchDevice() {
     endTimer()
+    BleManager.stopScan()
     return {type: types.STOP_SEARCH_DEVICE}
 }
 
 export function startDeviceConnect(device) {
+    stopSearchDevice()//连接前停止搜索
     return async (dispatch, getState) =>{
         dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid})
         BleManager.connect(device.uuid)
