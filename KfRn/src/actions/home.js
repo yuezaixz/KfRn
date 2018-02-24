@@ -1,6 +1,7 @@
 import * as types from '../constants/ActionTypes';
 import * as BleUUIDs from '../constants/BleUUIDs';
 import BleManager from 'react-native-ble-manager';
+import {Platform} from 'react-native';
 
 var loopTimer = 0;
 
@@ -31,37 +32,39 @@ export function startSearchDevice() {
         dispatch({type: types.START_SEARCH_DEVICE})
         var now = new Date().getTime();
         lastUpdateTime = now;
-        startTimer(function () {
-            BleManager.scan([BleUUIDs.SEARCH_SERVICE_UUID], 3, true).then((results) => {
-                console.log('Scanning...');
-                BleManager.getDiscoveredPeripherals([])
-                    .then((peripheralsArray) => {
-                        var new_list = []
 
-                        var tempState = getState()
-                        var current_list = tempState.home.device_list || []
-                        if (peripheralsArray ){
-                            for (var i = 0; i < peripheralsArray.length; i++) {
-                                var peripheral = peripheralsArray[i]
-                                var isExit = false;
-                                for (var j = 0; j < current_list.length; j++) {
-                                    var device = current_list[j]
-                                    if(device.uuid == peripheral.id) {
-                                        isExit = true
-                                        device.rssi = peripheral.rssi
-                                        break
-                                    }
-                                }
-                                if (!isExit) {
-                                    new_list.push({name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi})
+
+        BleManager.scan([Platform.OS === 'android' ? BleUUIDs.SEARCH_ANDROID_SERVICE_UUID : BleUUIDs.SEARCH_IOS_SERVICE_UUID], 0, true).then((results) => {
+            console.log('Scanning...');
+        })
+        startTimer(function () {
+            BleManager.getDiscoveredPeripherals([])
+                .then((peripheralsArray) => {
+                    var new_list = []
+
+                    var tempState = getState()
+                    var current_list = tempState.home.device_list || []
+                    if (peripheralsArray ){
+                        for (var i = 0; i < peripheralsArray.length; i++) {
+                            var peripheral = peripheralsArray[i]
+                            var isExit = false;
+                            for (var j = 0; j < current_list.length; j++) {
+                                var device = current_list[j]
+                                if(device.uuid == peripheral.id) {
+                                    isExit = true
+                                    device.rssi = peripheral.rssi
+                                    break
                                 }
                             }
+                            if (!isExit) {
+                                new_list.push({name:peripheral.name,uuid:peripheral.id, rssi:peripheral.rssi})
+                            }
                         }
+                    }
 
-                        new_list = [...new_list,...current_list]
-                        dispatch({type: types.UPDATE_DEVICE_LIST, devices:new_list})
-                    });
-            })
+                    new_list = [...new_list,...current_list]
+                    dispatch({type: types.UPDATE_DEVICE_LIST, devices:new_list})
+                });
         });
 
     }
@@ -69,10 +72,12 @@ export function startSearchDevice() {
 
 export function stopSearchDevice() {
     endTimer()
+    BleManager.stopScan()
     return {type: types.STOP_SEARCH_DEVICE}
 }
 
 export function startDeviceConnect(device) {
+    stopSearchDevice()//连接前停止搜索
     return async (dispatch, getState) =>{
         dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid})
         BleManager.connect(device.uuid)
