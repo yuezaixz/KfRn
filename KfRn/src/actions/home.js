@@ -86,9 +86,9 @@ export function startDeviceConnect(device) {
                         if (peripheralInfo.characteristics) {
                             for (var i = 0; i < peripheralInfo.characteristics.length; i++) {
                                 var characteristic = peripheralInfo.characteristics[i]
-                                if (characteristic.characteristic == BleUUIDs.PODOON_NOTIFICATION_CHARACTERISTIC_UUID) {
+                                if (characteristic.characteristic.toUpperCase() == BleUUIDs.PODOON_NOTIFICATION_CHARACTERISTIC_UUID) {
                                     notifyCharacteristic = characteristic.characteristic
-                                } else if (characteristic.characteristic == BleUUIDs.PODOON_WRITE_CHARACTERISTIC_UUID) {
+                                } else if (characteristic.characteristic.toUpperCase() == BleUUIDs.PODOON_WRITE_CHARACTERISTIC_UUID) {
                                     writeCharacteristic = characteristic.characteristic
                                 }
                             }
