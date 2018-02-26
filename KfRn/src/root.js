@@ -27,15 +27,19 @@ class Root extends Component {
             'BleManagerDidUpdateState',
             (args) => {
                 if (args.state === 'off') {
-                    BleManager.enableBluetooth()
-                        .then(() => {
-                            // Success code
-                            console.log('The bluetooh is already enabled or the user confirm');
-                        })
-                        .catch((error) => {
-                            // Failure code
-                            console.log('The user refuse to enable bluetooth');
-                        });
+                    if (Platform.OS === 'android' ) {
+                        BleManager.enableBluetooth()
+                            .then(() => {
+                                // Success code
+                                console.log('The bluetooh is already enabled or the user confirm');
+                            })
+                            .catch((error) => {
+                                // Failure code
+                                console.log('The user refuse to enable bluetooth');
+                            });
+                    } else {
+                        //TODO 弹提示，蓝牙未开启
+                    }
                 } else {
                     console.log('bluetooth state:'+args.state)
                 }
