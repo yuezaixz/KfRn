@@ -11,9 +11,6 @@ import App from './containers/App';
 import configureStore from './store/configureStore';
 import BleManager from 'react-native-ble-manager';
 
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-
 class Root extends Component {
     componentWillMount() {
         BleManager.start({showAlert: false})
@@ -23,33 +20,10 @@ class Root extends Component {
             });
     }
     componentDidMount() {
-        bleManagerEmitter.addListener(
-            'BleManagerDidUpdateState',
-            (args) => {
-                if (args.state === 'off') {
-                    if (Platform.OS === 'android' ) {
-                        BleManager.enableBluetooth()
-                            .then(() => {
-                                // Success code
-                                console.log('The bluetooh is already enabled or the user confirm');
-                            })
-                            .catch((error) => {
-                                // Failure code
-                                console.log('The user refuse to enable bluetooth');
-                            });
-                    } else {
-                        //TODO 弹提示，蓝牙未开启
-                    }
-                } else {
-                    console.log('bluetooth state:'+args.state)
-                }
-            }
-        );
-
-        BleManager.checkState();
         if (Platform.OS === 'android' && Platform.Version >= 23) {
             PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
                 if (result) {
+
                     console.log("Permission is OK");
                 } else {
                     PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
