@@ -65,6 +65,10 @@ export function readInsoleData(insoleData) {
     return {type: types.READ_INSOLE_DATA, insoleData}
 }
 
+export function readOtherInsoleData(insoleData) {
+    return {type: types.READ_OTHER_INSOLE_DATA, insoleData}
+}
+
 export function startCheckVoltage(uuid, serviceUUID, writeUUID) {
     const data = stringToBytes('BR');
 

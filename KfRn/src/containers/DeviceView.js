@@ -25,8 +25,14 @@ class DeviceView extends Component {
             var serviceUUID = params ? params.serviceUUID : null;
             var noitfyUUID = params ? params.noitfyUUID : null;
             var writeUUID = params ? params.writeUUID : null;
+            var other_uuid = params ? params.other_uuid : null;
+            var other_name = params ? params.other_name : null;
+            var other_serviceUUID = params ? params.other_serviceUUID : null;
+            var other_noitfyUUID = params ? params.other_noitfyUUID : null;
+            var other_writeUUID = params ? params.other_writeUUID : null;
             this.setState({
-                uuid, name, serviceUUID, noitfyUUID, writeUUID
+                uuid, name, serviceUUID, noitfyUUID, writeUUID,
+                other_uuid, other_name, other_serviceUUID, other_noitfyUUID, other_writeUUID
             });
         }
         //先检查电量
@@ -60,7 +66,12 @@ function mapStateToProps(state) {
             name:state.home.name,
             serviceUUID:state.home.serviceUUID,
             noitfyUUID:state.home.noitfyUUID,
-            writeUUID:state.home.writeUUID
+            writeUUID:state.home.writeUUID,
+            other_uuid:state.home.other_uuid,
+            other_name:state.home.other_name,
+            other_serviceUUID:state.home.other_serviceUUID,
+            other_noitfyUUID:state.home.other_noitfyUUID,
+            other_writeUUID:state.home.other_writeUUID
         }
     };
 }

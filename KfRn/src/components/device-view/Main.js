@@ -28,6 +28,14 @@ class Main extends Component {
             this.props.actions.readInsoleData(insole_data)
         } else {
             this.props.actions.startReadInsoleData(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
+            setTimeout(()=>{
+                this.props.actions.startReadInsoleData(
+                    that.props.device_data.other_uuid,
+                    that.props.device_data.other_serviceUUID,
+                    that.props.device_data.other_writeUUID
+                )
+            }, 300)
+
         }
 
     }
@@ -59,17 +67,24 @@ class Main extends Component {
         console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        if (datas[0] == 1) {
-            var insole_data = [datas[1],datas[2],datas[3]]
-            that.props.actions.readInsoleData(insole_data)
-        } else if (datas[0] == 86) {
-            that.props.actions.readVersion(dataStr.substring(3))
-        } else if (datas[0] == 66) {
-            that.props.actions.readVoltage(dataStr)
-        } else if (datas[0] == 80 && datas[1] == 78) {
-            that.props.actions.readBatch(dataStr.substring(3))
-        } else if (datas[0] == 68) {
-            that.props.actions.readStep(dataStr.substring(3))
+        if (that.props.device_data.uuid == data.peripheral) {
+            if (datas[0] == 1) {
+                var insole_data = [datas[1],datas[2],datas[3]]
+                that.props.actions.readInsoleData(insole_data)
+            } else if (datas[0] == 86) {
+                that.props.actions.readVersion(dataStr.substring(3))
+            } else if (datas[0] == 66) {
+                that.props.actions.readVoltage(dataStr)
+            } else if (datas[0] == 80 && datas[1] == 78) {
+                that.props.actions.readBatch(dataStr.substring(3))
+            } else if (datas[0] == 68) {
+                that.props.actions.readStep(dataStr.substring(3))
+            }
+        } else if (that.props.device_data.other_uuid == data.peripheral) {
+            if (datas[0] == 1) {
+                var insole_data = [datas[1],datas[2],datas[3]]
+                that.props.actions.readOtherInsoleData(insole_data)
+            }
         }
     }
     render() {
@@ -91,6 +106,11 @@ class Main extends Component {
                             </Text>
                         </View>
                     </TouchableHighlight>
+                </View>
+                <View style={styles.insole_info}>
+                    <Text style={[styles.text, styles.title]}>
+                        另只压力数据：{this.props.device_data.other_insoleDataStr || '--'}
+                    </Text>
                 </View>
                 <View style={styles.insole_info}>
                     <Text style={[styles.text, styles.title]}>

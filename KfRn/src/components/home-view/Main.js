@@ -48,13 +48,18 @@ class Main extends Component {
         return null;
     }
     componentDidUpdate () {
-        if (this.props.home_data.uuid) {//连接成功，那就跳转了
+        if (this.props.home_data.uuid && this.props.home_data.other_uuid) {//连接成功，那就跳转了
             this.props.navigation.navigate('Device',{
                 uuid: this.props.home_data.uuid,
                 name: this.props.home_data.name,
                 serviceUUID: this.props.home_data.serviceUUID,
                 noitfyUUID: this.props.home_data.noitfyUUID,
-                writeUUID: this.props.home_data.writeUUID
+                writeUUID: this.props.home_data.writeUUID,
+                other_uuid: this.props.home_data.other_uuid,
+                other_name: this.props.home_data.other_name,
+                other_serviceUUID: this.props.home_data.other_serviceUUID,
+                other_noitfyUUID: this.props.home_data.other_noitfyUUID,
+                other_writeUUID: this.props.home_data.other_writeUUID
             })
         }
     }

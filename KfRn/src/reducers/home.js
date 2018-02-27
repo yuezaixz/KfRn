@@ -23,7 +23,7 @@ export default function home(state = initialState, action) {
         case types.START_DEVICE_CONNECT:
             return {...state, failConnectedMsg: "", isConnecting: true, connecting_uuid: action.uuid};
         case types.SUCCESS_DEVICE_CONNECT:
-            return {...state, isConnecting: false, connecting_uuid:'', name: action.name, uuid: action.uuid, serviceUUID: action.serviceUUID, noitfyUUID: action.noitfyUUID, writeUUID: action.writeUUID};
+            return state.uuid? {...state, isConnecting: false, connecting_uuid:'', name: state.name, uuid: state.uuid, serviceUUID: state.serviceUUID, noitfyUUID: state.noitfyUUID, writeUUID: state.writeUUID, other_name: action.name, other_uuid: action.uuid, other_serviceUUID: action.serviceUUID, other_noitfyUUID: action.noitfyUUID, other_writeUUID: action.writeUUID}: {...state, isConnecting: false, connecting_uuid:'', name: action.name, uuid: action.uuid, serviceUUID: action.serviceUUID, noitfyUUID: action.noitfyUUID, writeUUID: action.writeUUID};
         case types.FAIL_DEVICE_CONNECT:
             return {...state, isConnecting: false, connecting_uuid:'', failConnectedMsg: action.errorMsg};
         case types.UPDATE_DEVICE_LIST:
