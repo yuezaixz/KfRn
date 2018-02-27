@@ -30,6 +30,8 @@ export default function(state = {index: 0}, action) {
             return {...state, isReadingInsoleData: false};
         case types.READ_INSOLE_DATA:
             return {...state, insoleData: action.insoleData, insoleDataStr: action.insoleData.join(":")};
+        case types.READ_OTHER_INSOLE_DATA:
+            return {...state, other_insoleData: action.insoleData, other_insoleDataStr: action.insoleData.join(":")};
     }
 
     return state;
