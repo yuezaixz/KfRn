@@ -605,7 +605,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				A62DE87320274D7400A7481D /* ShellScript */,
+				A62DE87320274D7400A7481D /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -1011,13 +1011,14 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		A62DE87320274D7400A7481D /* ShellScript */ = {
+		A62DE87320274D7400A7481D /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1121,6 +1122,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.podoon.KfRn;
 				PRODUCT_NAME = KfRn;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1140,6 +1142,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.podoon.KfRn;
 				PRODUCT_NAME = KfRn;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
