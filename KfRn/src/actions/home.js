@@ -34,10 +34,25 @@ export function startSearchDevice() {
         lastUpdateTime = now;
 
 
-        BleManager.scan([Platform.OS === 'android' ? BleUUIDs.SEARCH_ANDROID_SERVICE_UUID : BleUUIDs.SEARCH_IOS_SERVICE_UUID], 0, true).then((results) => {
-            console.log('Scanning...');
-        })
+        //适配搜索在不同平台的问题。这个库在iOS需要一直去调用scan，在安卓不用。原生代码实现的问题？
+        if (Platform.OS === 'android') {
+            BleManager.scan([BleUUIDs.SEARCH_ANDROID_SERVICE_UUID], 0, true).then((results) => {
+                console.log('Scanning...');
+            })
+        }
+
+        if (Platform.OS === 'ios') {
+            BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
+                console.log('Scanning...');
+            })
+        }
+
         startTimer(function () {
+            if (Platform.OS === 'ios') {
+                BleManager.scan([BleUUIDs.SEARCH_IOS_SERVICE_UUID], 3, true).then((results) => {
+                    console.log('Scanning...');
+                })
+            }
             BleManager.getDiscoveredPeripherals([])
                 .then((peripheralsArray) => {
                     var new_list = []
