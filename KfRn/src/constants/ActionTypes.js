@@ -1,5 +1,6 @@
 export const SWITCH_MAIN_TAB = 'SWITCH_MAIN_TAB';
 
+/****************搜索连接相关****************/
 //HOME ACTION TYPES
 export const START_SEARCH_DEVICE = 'START_SEARCH_DEVICE';
 export const STOP_SEARCH_DEVICE = 'STOP_SEARCH_DEVICE';
@@ -14,10 +15,12 @@ export const SUCCESS_DEVICE_DISCONNECT = 'SUCCESS_DEVICE_DISCONNECT';
 export const FAIL_DEVICE_DISCONNECT = 'FAIL_DEVICE_DISCONNECT';
 export const START_READ_VERSION = 'START_READ_VERSION';
 export const READ_VERSION = 'READ_VERSION';
-export const START_READ_INSOLE_DATA = 'START_READ_INSOLE_DATA';
-export const STOP_READ_INSOLE_DATA = 'STOP_READ_INSOLE_DATA';
-export const READ_INSOLE_DATA = 'READ_INSOLE_DATA';
-export const READ_OTHER_INSOLE_DATA = 'READ_OTHER_INSOLE_DATA';
+
+export const CLEAR_DEVICE_DATA = 'CLEAR_DEVICE_DATA';
+
+export const ERROR = 'ERROR';
+
+/****************读取电压****************/
 export const START_CHECK_VOLTAGE = 'START_CHECK_VOLTAGE';
 export const START_READ_VOLTAGE = 'START_READ_VOLTAGE';
 export const READ_VOLTAGE = 'READ_VOLTAGE';
@@ -26,3 +29,32 @@ export const READ_BATCH = 'READ_BATCH';
 export const START_READ_STEP = 'START_READ_STEP';
 export const READ_STEP = 'READ_STEP';
 
+
+export const START_READ_MAC_ADDRESS = 'START_READ_MAC_ADDRESS';
+export const READ_MAC_ADDRESS = 'READ_MAC_ADDRESS';
+export const START_READ_ADJUST = 'START_READ_ADJUST';
+export const READ_ADJUST = 'READ_ADJUST';
+
+/****************传感器校准****************/
+export const START_READ_INSOLE_DATA = 'START_READ_INSOLE_DATA';
+export const STOP_READ_INSOLE_DATA = 'STOP_READ_INSOLE_DATA';
+export const READ_INSOLE_DATA = 'READ_INSOLE_DATA';
+
+//开始校准,进入退出校准模式
+export const START_ADJUST = 'START_ADJUST';
+export const SUCCESS_START_ADJUST = 'SUCCESS_START_ADJUST';
+
+export const STOP_ADJUST = 'STOP_ADJUST';
+export const SUCCESS_STOP_ADJUST = 'SUCCESS_STOP_ADJUST';
+
+export const RECORD_SENSOR_ADJUST = 'RECORD_SENSOR_ADJUST';
+
+//传感器校准，1~16个传感器的校准
+export const SENSOR_ADJUST = 'SENSOR_ADJUST';
+export const SUCCESS_SENSOR_ADJUST = 'SUCCESS_SENSOR_ADJUST';
+export const RE_ADJUST = 'RE_ADJUST';
+
+/****************传感器校准****************/
+export const START_UPLOAD_RECORD = 'START_UPLOAD_RECORD';
+export const SUCCESS_UPLOAD_RECORD = 'SUCCESS_UPLOAD_RECORD';
+export const FAIL_UPLOAD_RECORD = 'FAIL_UPLOAD_RECORD';
