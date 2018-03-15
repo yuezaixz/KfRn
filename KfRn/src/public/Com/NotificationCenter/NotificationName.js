@@ -15,5 +15,7 @@ module.exports = {
         readInsoleData: 'com.podoon.readInsoleData',
         readMacAddress: 'com.podoon.readMacAddress',
         readAdjust: 'com.podoon.readAdjust',
+        readVersion: 'com.podoon.readVersion',
+        readStep: 'com.podoon.readStep',
     }
 };

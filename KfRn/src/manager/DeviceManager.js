@@ -14,13 +14,13 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 let instance = null;
 
-export default class PillowManager{
+export default class DeviceManager{
     loopTimer = 0;
     isSearching = false;
     lastUpdateTime = 0;
     loopCallback = null;
     device_list = [];
-    current_pillow = null
+    left_device = null
 
     isLoseConnecting = false;
 
@@ -34,7 +34,7 @@ export default class PillowManager{
     reconnect() {
         console.log('开始重连')
         if (this.isLoseConnecting){
-            this.startDeviceConnect(this.current_pillow).then((device)=>{
+            this.startDeviceConnect(this.left_device).then((device)=>{
                 this.isLoseConnecting = true
                 NotificationCenter.post(NotificationCenter.name.search.reconnect)
             }).catch((error)=>{
@@ -49,7 +49,7 @@ export default class PillowManager{
         this.disconnectListener = bleManagerEmitter.addListener(
             'BleManagerDisconnectPeripheral',
             ((args) => {
-                if(this.current_pillow && this.current_pillow.uuid == args.peripheral) {
+                if(this.left_device && this.left_device.uuid == args.peripheral) {
                     //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
 
                     this.isLoseConnecting = true
@@ -73,12 +73,18 @@ export default class PillowManager{
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
         console.log(dataStr)
-        if (this.current_pillow.uuid == data.peripheral) {
+        if (this.left_device.uuid == data.peripheral) {
             if (datas[0] == 1) {
                 NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {point1:datas[1], point2:datas[2], point3:datas[3]})
             } else if (datas[0] == 80 && datas[1] == 78) {
                 var batch = dataStr.substring(3)
                 NotificationCenter.post(NotificationCenter.name.deviceData.batch, {batch})
+            } else if (datas[0] == 86) {
+                var version = dataStr.substring(3)
+                NotificationCenter.post(NotificationCenter.name.deviceData.readVersion, {version})
+            } else if (datas[0] == 68) {
+                var step = parseInt(dataStr.substring(3))
+                NotificationCenter.post(NotificationCenter.name.deviceData.readStep, {step})
             } else if (util.startWith(dataStr, "Batt")) {
                 var voltage = dataStr.substring(5)
                 NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {voltage})
@@ -98,7 +104,7 @@ export default class PillowManager{
     }
 
     static ShareInstance(){
-        let singleton = new PillowManager();
+        let singleton = new DeviceManager();
         return singleton;
     }
 
@@ -129,6 +135,13 @@ export default class PillowManager{
 
     startReadVoltage() {
         return this.writeData('BG')
+    }
+    startReadVersion() {
+        return this.writeData('VN')
+    }
+
+    startReadStep() {
+        return this.writeData('W')
     }
 
     startReadAdjust() {
@@ -281,9 +294,9 @@ export default class PillowManager{
                             if (notifyCharacteristic && writeCharacteristic) {
                                 BleManager.startNotification(device.uuid, BleUUIDs.PODOON_SERVICE_UUID, notifyCharacteristic)
                                     .then(() => {
-                                        this.current_pillow = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
+                                        this.left_device = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
                                             noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
-                                        resolve(this.current_pillow)
+                                        resolve(this.left_device)
                                     })
                                     .catch((error) => {
                                         reject(new Error("startNotification失败"+error))
@@ -304,7 +317,7 @@ export default class PillowManager{
     deviceDisconnect(uuid) {
 
         return new Promise((resolve, reject) => {
-            if (!this.current_pillow) {
+            if (!this.left_device) {
                 reject(new Error('无当前设备'))
             } else if(this.isLoseConnecting) {
                 resolve(uuid)
@@ -326,7 +339,7 @@ export default class PillowManager{
     writeData(command) {
         console.log(command)
         const data = stringToBytes(command);
-        let current_device = this.current_pillow
+        let current_device = this.left_device
         return new Promise((resolve, reject) => {
             if (current_device) {
                 BleManager.write(current_device.uuid, current_device.serviceUUID, current_device.writeUUID, data)
