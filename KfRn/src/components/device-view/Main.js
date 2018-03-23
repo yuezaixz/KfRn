@@ -9,17 +9,25 @@ import {
 } from 'react-native';
 import {Theme} from "../../styles";
 import * as util from "../../utils/InsoleUtils"
-import * as types from "../../constants/ActionTypes";
 
-
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+import NotificationCenter from '../../public/Com/NotificationCenter/NotificationCenter'
+import PillowManager from '../../manager/PillowManager'
 
 let {height, width} = Dimensions.get('window');
 
-let that = null
-
 class Main extends Component {
+    handleVersion = ()=>{
+        this.props.actions.startReadVersion()
+    }
+    handleBatch = ()=>{
+        this.props.actions.startReadBatch()
+    }
+    handleVoltage = ()=>{
+        this.props.actions.startReadVoltage()
+    }
+    handleStep = ()=>{
+        this.props.actions.startReadStep()
+    }
     handleInsoleDatas = ()=>{
         if (this.props.device_data.isReadingInsoleData) {
             this.props.actions.stopReadInsoleData(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
@@ -27,66 +35,25 @@ class Main extends Component {
             var insole_data = [0,0,0]
             this.props.actions.readInsoleData(insole_data)
         } else {
-            this.props.actions.startReadInsoleData(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-            setTimeout(()=>{
-                this.props.actions.startReadInsoleData(
-                    that.props.device_data.other_uuid,
-                    that.props.device_data.other_serviceUUID,
-                    that.props.device_data.other_writeUUID
-                )
-            }, 300)
+            this.props.actions.startReadInsoleData()
 
+            // TODO 成功后
+            // this.props.actions.startReadRightInsoleData()
         }
 
     }
-    handleVersion = ()=>{
-        this.props.actions.startReadVersion(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-    }
-    handleBatch = ()=>{
-        this.props.actions.startReadBatch(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-    }
-    handleVoltage = ()=>{
-        this.props.actions.startReadVoltage(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-    }
-    handleStep = ()=>{
-        this.props.actions.startReadStep(this.props.device_data.uuid, this.props.device_data.serviceUUID, this.props.device_data.writeUUID)
-    }
     componentDidMount() {
-        that = this
-        this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+
     }
     componentWillUnmount() {
-        this.handlerUpdate.remove();
+
     }
     componentDidUpdate () {
         if (!this.props.device_data.uuid) {//断开成功
             this.props.navigation.goBack()
         }
     }
-    handleUpdateValueForCharacteristic(data) {
-        console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
-        var datas = data.value
-        var dataStr = util.arrayBufferToBase64Str(datas)
-        if (that.props.device_data.uuid == data.peripheral) {
-            if (datas[0] == 1) {
-                var insole_data = [datas[1],datas[2],datas[3]]
-                that.props.actions.readInsoleData(insole_data)
-            } else if (datas[0] == 86) {
-                that.props.actions.readVersion(dataStr.substring(3))
-            } else if (datas[0] == 66) {
-                that.props.actions.readVoltage(dataStr)
-            } else if (datas[0] == 80 && datas[1] == 78) {
-                that.props.actions.readBatch(dataStr.substring(3))
-            } else if (datas[0] == 68) {
-                that.props.actions.readStep(dataStr.substring(3))
-            }
-        } else if (that.props.device_data.other_uuid == data.peripheral) {
-            if (datas[0] == 1) {
-                var insole_data = [datas[1],datas[2],datas[3]]
-                that.props.actions.readOtherInsoleData(insole_data)
-            }
-        }
-    }
+
     render() {
         return (
             <View style={styles.container}>
