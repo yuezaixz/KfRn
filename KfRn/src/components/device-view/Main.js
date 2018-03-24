@@ -116,7 +116,7 @@ class Main extends Component {
                 </View>
                 <View style={styles.insole_info}>
                     <Text style={[styles.text, styles.title]}>
-                        版本：{this.props.leftDevice.device_data.version || '--'}
+                        版本：{this.props.device_data.leftDevice.version || '--'}
                     </Text>
 
                     <TouchableHighlight
