@@ -146,7 +146,7 @@ export default class DeviceManager{
         if (uuid === this.leftDevice.uuid) {
             return 1
         } else if (uuid === this.rightDevice.uuid) {
-            return 1
+            return 2
         }
         return 0
     }
