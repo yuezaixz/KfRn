@@ -26,7 +26,7 @@ class Main extends Component {
         });
     }
     renderLoading = () => {
-        if (this.props.home_data.leftDevice.uuid) {
+        if (this.props.home_data.leftDevice) {
             return (
                 <View style={styles.loading}>
                     <Text style={styles.loadingText}>左脚连接成功</Text>
