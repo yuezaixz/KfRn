@@ -46,7 +46,8 @@ class DeviceView extends Component {
     componentWillMount(){
         this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
 
-        this.props.actions.startCheckVoltage();
+        this.props.actions.startCheckVoltage(this.props.device_data.leftDevice.uuid);
+        this.props.actions.startCheckVoltage(this.props.device_data.rightDevice.uuid);
     }
     componentDidMount(){
         console.log('进入设备页面')

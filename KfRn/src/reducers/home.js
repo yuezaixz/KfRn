@@ -120,9 +120,9 @@ export default function home(state = initialState, action) {
             }
         case types.READ_INSOLE_DATA:
             if (action.uuid == state.leftDevice.uuid) {
-                return {...state, leftDevice:{...state.leftDevice,  insoleData: action.insoleData}};
+                return {...state, leftDevice:{...state.leftDevice,  insoleData: [action.point1, action.point2, action.point3]}};
             } else if (action.uuid == state.rightDevice.uuid) {
-                return {...state, rightDevice:{...state.rightDevice, insoleData: action.insoleData}};
+                return {...state, rightDevice:{...state.rightDevice, insoleData: [action.point1, action.point2, action.point3]}};
             } else {
                 return state;
             }

@@ -48,7 +48,7 @@ class Main extends Component {
         return null;
     }
     componentDidUpdate () {
-        if (this.props.home_data.leftDevice && this.props.home_data.rightDevice) {//连接成功，那就跳转了
+        if (this.props.isVisible && this.props.home_data.leftDevice && this.props.home_data.rightDevice) {//连接成功，那就跳转了
             this.props.navigation.navigate('Device')
         }
     }

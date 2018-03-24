@@ -53,11 +53,14 @@ export function readMacAddress(uuid, macAddress) {
     return {type: types.READ_MAC_ADDRESS, uuid, macAddress}
 }
 
-export function startReadInsoleData(uuid) {
+export function startReadInsoleData(uuid, callback) {
     return async (dispatch, getState) =>{
         DeviceManager.ShareInstance().startReadInsoleData(uuid)
             .then(()=>{
                 dispatch({type: types.START_READ_INSOLE_DATA, uuid})
+                if (callback) {
+                    callback()
+                }
             })
     }
 }

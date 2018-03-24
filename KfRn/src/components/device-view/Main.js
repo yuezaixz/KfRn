@@ -30,8 +30,9 @@ class Main extends Component {
             this.props.actions.readInsoleData(this.props.device_data.leftDevice.uuid,...insole_data)
             this.props.actions.readInsoleData(this.props.device_data.rightDevice.uuid,...insole_data)
         } else {
-            this.props.actions.startReadInsoleData(this.props.device_data.leftDevice.uuid)
-            this.props.actions.startReadInsoleData(this.props.device_data.rightDevice.uuid)
+            this.props.actions.startReadInsoleData(this.props.device_data.leftDevice.uuid, ()=>{
+                this.props.actions.startReadInsoleData(this.props.device_data.rightDevice.uuid)
+            })
         }
 
     }
