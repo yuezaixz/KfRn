@@ -11,26 +11,71 @@ import {
     NativeEventEmitter,
     NativeModules, Dimensions
 } from 'react-native';
+import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
 import Modal from 'react-native-simple-modal';
 import BleManager from 'react-native-ble-manager';
-let {height, width} = Dimensions.get('window');
-
 import {
     Header,
     Main,
     Footer,
 } from '../components/home-view';
 import Actions from '../actions';
+import NotificationCenter from "../public/Com/NotificationCenter/NotificationCenter";
 
+let {height, width} = Dimensions.get('window');
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 class HomeView extends Component {
+
+    static navigationOptions = ({ navigation }) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title:"鞋垫搜索",
+            headerLeft: (
+                <StatusBarLeftButton onPress={params.settingAction} title="设置" ></StatusBarLeftButton>
+            ),
+        };
+    };
     isFirst = true
     state = {open: true};
     constructor(props){
         super(props);
         this.state = {isVisible: true}
+    }
+    _settingAction(){
+        // this.props.navigation.navigate('Setting',{settingValue: this.settingValue})
+    }
+    componentWillMount() {
+
+        this.props.navigation.setParams({ settingAction: this._settingAction.bind(this) });
+
+        this.props.navigation.addListener(
+            'didFocus',
+            payload => {
+                setTimeout(() => {
+                    setTimeout(() => {this.props.actions.startSearchDevice()}, 500)
+                    this.isFirst = false
+                    this.setState({isVisible: true});
+                }, 500)
+            }
+        );
+        this.props.navigation.addListener(
+            'willBlur',
+            payload => {
+                this.props.actions.stopSearchDevice();
+                this.setState({isVisible: false});
+            }
+        );
+
+        this.updateListListener = NotificationCenter.createListener(NotificationCenter.name.search.updateList, this.updateDeviceList.bind(this), '');
+    }
+
+    updateDeviceList(data) {
+        if (data.data) {
+            this.props.actions.updateDeviceList(data.data)
+        }
     }
     componentDidMount() {
         bleManagerEmitter.addListener(
@@ -82,23 +127,9 @@ class HomeView extends Component {
     }
     componentWillUnmount(){
         bleManagerEmitter.removeAllListeners('BleManagerDidUpdateState')
+        bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral')
+        NotificationCenter.removeListener(this.updateListListener);
         this.props.actions.stopSearchDevice()
-    }
-    bindEvents = ()=>{
-        // this.willFocusSubscription  = this.props.navigator.navigationContext.addListener('willfocus', (event) => {
-        //     if (this.currentRoute !== event.data.route) {//切换会当前页面，开始搜索，列表显示
-        //         this.setState({isVisible: false});
-        //     }
-        // });
-        // this.didFocusSubscription  = this.props.navigator.navigationContext.addListener('didfocus', (event) => {
-        //     if (this.currentRoute === event.data.route) {
-        //         this.setState({isVisible: true});
-        //     }
-        // });
-    }
-    unBindEvents = ()=>{
-        // this.willFocusSubscription.remove();
-        // this.didFocusSubscription.remove();
     }
     render() {
         return (
@@ -107,7 +138,7 @@ class HomeView extends Component {
                 <Main {...this.props} isVisible={this.state.isVisible}/>
                 <Footer {...this.props}/>
 
-                <View style={{position:'absolute',width: width, height: height}}>
+                <View style={{position:'absolute',width: this.state.open?width:0, height: this.state.open?height:0}}>
                     <View  style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Modal
                             offset={0}

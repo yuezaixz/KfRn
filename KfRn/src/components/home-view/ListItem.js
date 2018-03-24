@@ -16,11 +16,11 @@ class ListItem extends Component {
             //todo 提示连接中，请稍等
             return;
         }
-        if (this.props.home_data.uuid == this.props.data.uuid) {
+        if (this.props.home_data.leftDevice && this.props.home_data.leftDevice.uuid == this.props.data.uuid) {
             return;
         }
         this.props.actions.stopSearchDevice()
-        this.props.actions.startDeviceConnect(this.props.data);
+        this.props.actions.startDeviceConnect(this.props.data, this.props.home_data.leftDevice == null );
     }
     render() {
         return (
@@ -32,7 +32,7 @@ class ListItem extends Component {
                     onPress={this.handleConnect}>
                     <Text style={BasicStyle.text}>{this.props.data.name}</Text>
                 </TouchableHighlight>
-                <Text style={styles.timer}>{this.props.home_data.isConnecting && this.props.home_data.connecting_uuid==this.props.data.uuid?'连接中':(this.props.data.uuid==this.props.home_data.uuid?'已连接':this.props.data.rssi)}</Text>
+                <Text style={styles.timer}>{this.props.home_data.isConnecting && this.props.home_data.connecting_uuid==this.props.data.uuid?'连接中':(this.props.home_data.leftDevice && this.props.data.uuid==this.props.home_data.leftDevice.uuid?'已连接':this.props.data.rssi)}</Text>
             </View>
         );
     }

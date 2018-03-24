@@ -12,31 +12,42 @@ import {
     Footer,
 } from '../components/device-view';
 import Actions from '../actions';
+import StatusBarLeftButton from '../components/common/StatusBarLeftButton'
+import Loading from '../components/common/WLoading'
 
 class DeviceView extends Component {
+
+    static navigationOptions = ({ navigation }) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title:"枕头固件测试",
+            headerLeft: (
+                <StatusBarLeftButton onPress={params.backAction} title="返回" ></StatusBarLeftButton>
+            ),
+        };
+    };
+
+    getLoading() {
+        return this.refs['loading'];
+    }
+
+    _backAction(){
+        console.log('backAction')
+        this.props.actions.deviceDisconnect(this.props.device_data.leftDevice.uuid)
+        this.props.actions.deviceDisconnect(this.props.device_data.rightDevice.uuid)
+        // this.props.actions.clearDeviceData()
+        setTimeout(()=>{this.props.navigation.pop()},100)
+    }
+
     constructor(props){
         super(props);
     }
     componentWillMount(){
-        const { params } = this.props.navigation.state;
-        if (params && params.uuid) {
-            var uuid = params ? params.uuid : null;
-            var name = params ? params.name : null;
-            var serviceUUID = params ? params.serviceUUID : null;
-            var noitfyUUID = params ? params.noitfyUUID : null;
-            var writeUUID = params ? params.writeUUID : null;
-            var other_uuid = params ? params.other_uuid : null;
-            var other_name = params ? params.other_name : null;
-            var other_serviceUUID = params ? params.other_serviceUUID : null;
-            var other_noitfyUUID = params ? params.other_noitfyUUID : null;
-            var other_writeUUID = params ? params.other_writeUUID : null;
-            this.setState({
-                uuid, name, serviceUUID, noitfyUUID, writeUUID,
-                other_uuid, other_name, other_serviceUUID, other_noitfyUUID, other_writeUUID
-            });
-        }
-        //先检查电量
-        this.props.actions.startCheckVoltage(uuid, serviceUUID, writeUUID);
+        this.props.navigation.setParams({ backAction: this._backAction.bind(this) });
+
+        this.props.actions.startCheckVoltage(this.props.device_data.leftDevice.uuid);
+        this.props.actions.startCheckVoltage(this.props.device_data.rightDevice.uuid);
     }
     componentDidMount(){
         console.log('进入设备页面')
@@ -46,8 +57,9 @@ class DeviceView extends Component {
         return (
             <View style={styles.container}>
                 <Header {...this.props}/>
-                <Main {...this.props}/>
-                <Footer {...this.props}/>
+                <Main {...this.props} getLoading={this.getLoading.bind(this)} />
+                <Footer {...this.props} getLoading={this.getLoading.bind(this)} />
+                <Loading ref={'loading'} text={'测试中...'} />
             </View>
         );
     }
@@ -61,18 +73,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        device_data: {...state.device,
-            uuid:state.home.uuid,
-            name:state.home.name,
-            serviceUUID:state.home.serviceUUID,
-            noitfyUUID:state.home.noitfyUUID,
-            writeUUID:state.home.writeUUID,
-            other_uuid:state.home.other_uuid,
-            other_name:state.home.other_name,
-            other_serviceUUID:state.home.other_serviceUUID,
-            other_noitfyUUID:state.home.other_noitfyUUID,
-            other_writeUUID:state.home.other_writeUUID
-        }
+        device_data: {...state.home}
     };
 }
 

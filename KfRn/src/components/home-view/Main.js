@@ -26,10 +26,10 @@ class Main extends Component {
         });
     }
     renderLoading = () => {
-        if (this.props.home_data.uuid) {
+        if (this.props.home_data.leftDevice) {
             return (
                 <View style={styles.loading}>
-                    <Text style={styles.loadingText}>连接成功</Text>
+                    <Text style={styles.loadingText}>左脚连接成功</Text>
                 </View>
             )
         } else if (this.props.home_data.isConnecting) {
@@ -48,19 +48,8 @@ class Main extends Component {
         return null;
     }
     componentDidUpdate () {
-        if (this.props.home_data.uuid && this.props.home_data.other_uuid) {//连接成功，那就跳转了
-            this.props.navigation.navigate('Device',{
-                uuid: this.props.home_data.uuid,
-                name: this.props.home_data.name,
-                serviceUUID: this.props.home_data.serviceUUID,
-                noitfyUUID: this.props.home_data.noitfyUUID,
-                writeUUID: this.props.home_data.writeUUID,
-                other_uuid: this.props.home_data.other_uuid,
-                other_name: this.props.home_data.other_name,
-                other_serviceUUID: this.props.home_data.other_serviceUUID,
-                other_noitfyUUID: this.props.home_data.other_noitfyUUID,
-                other_writeUUID: this.props.home_data.other_writeUUID
-            })
+        if (this.props.isVisible && this.props.home_data.leftDevice && this.props.home_data.rightDevice) {//连接成功，那就跳转了
+            this.props.navigation.navigate('Device')
         }
     }
     render() {

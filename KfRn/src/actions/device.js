@@ -1,104 +1,109 @@
 import * as types from '../constants/ActionTypes';
-import {
-    NativeAppEventEmitter,
-    NativeEventEmitter,
-    NativeModules,
-} from 'react-native';
-import BleManager from 'react-native-ble-manager';
-
-function writeData(uuid, serviceUUID, writeUUID, successType, command, func) {
-    BleManager.write(uuid, serviceUUID, writeUUID, command)
-        .then(() => {
-            //todo 写入成功
-            if (func) {
-                func()
-            }
-        })
-        .catch((error) => {
-            //todo 写入失败
-            console.log(error);
-        });
-
-    return {type: successType}
-}
-
-import { stringToBytes } from 'convert-string';
+import DeviceManager from '../manager/DeviceManager'
 
 export function deviceDisconnect(uuid) {
     return async (dispatch, getState) =>{
         dispatch({type: types.DEVICE_DISCONNECT, uuid: uuid})
-        BleManager.disconnect(uuid)
-            .then(() => {
-                dispatch({type: types.SUCCESS_DEVICE_CONNECT, uuid: uuid})
+        DeviceManager
+            .ShareInstance()
+            .deviceDisconnect(uuid)
+            .then(()=>{
+                dispatch({type: types.SUCCESS_DEVICE_DISCONNECT, uuid: uuid})
             })
             .catch((error) => {
                 dispatch({type: types.FAIL_DEVICE_DISCONNECT, errorMsg: error})
             });
-
     }
-
-
 
     return {type: types.DEVICE_DISCONNECT}
 }
 
-export function startReadVersion(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('VN');
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_VERSION, data);
+export function startCheckVoltage(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startCheckVoltage(uuid)
+            .then(()=>{
+                dispatch({type: types.START_CHECK_VOLTAGE, uuid})
+            })
+    }
 }
 
-export function readVersion(version) {
-    return {type: types.READ_VERSION, version}
+export function startReadVoltage(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startReadVoltage()
+            .then(()=>{
+                dispatch({type: types.START_READ_VOLTAGE, uuid})
+            })
+    }
 }
 
-export function startReadInsoleData(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('E');
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_INSOLE_DATA, data);
+export function readVoltage(uuid, voltage) {
+    return {type: types.READ_VOLTAGE, uuid, voltage}
 }
 
-export function stopReadInsoleData(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('D');
-    return writeData(uuid, serviceUUID, writeUUID, types.STOP_READ_INSOLE_DATA, data);
+export function startReadMacAddress(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startReadMacAddress()
+            .then(()=>{
+                dispatch({type: types.START_READ_MAC_ADDRESS, uuid})
+            })
+    }
 }
 
-export function readInsoleData(insoleData) {
-    return {type: types.READ_INSOLE_DATA, insoleData}
+export function readMacAddress(uuid, macAddress) {
+    return {type: types.READ_MAC_ADDRESS, uuid, macAddress}
 }
 
-export function readOtherInsoleData(insoleData) {
-    return {type: types.READ_OTHER_INSOLE_DATA, insoleData}
+export function startReadInsoleData(uuid, callback) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startReadInsoleData(uuid)
+            .then(()=>{
+                dispatch({type: types.START_READ_INSOLE_DATA, uuid})
+                if (callback) {
+                    callback()
+                }
+            })
+    }
 }
 
-export function startCheckVoltage(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('BR');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_CHECK_VOLTAGE, data);
+export function stopReadInsoleData(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().stopReadInsoleData(uuid)
+            .then(()=>{
+                dispatch({type: types.STOP_READ_INSOLE_DATA, uuid})
+            })
+    }
 }
 
-export function startReadVoltage(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('BG');
-
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_VOLTAGE, data);
+export function readInsoleData(uuid, point1, point2, point3) {
+    return {type: types.READ_INSOLE_DATA, uuid, point1, point2, point3}
 }
 
-export function readVoltage(voltage) {
-    return {type: types.READ_VOLTAGE, voltage}
+export function clearDeviceData(uuid) {
+    return {type: types.CLEAR_DEVICE_DATA, uuid}
 }
 
-export function startReadBatch(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('GS');
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_BATCH, data);
+export function startReadBatch(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startReadBatch(uuid)
+            .then(()=>{
+                dispatch({type: types.START_READ_BATCH, uuid})
+            })
+    }
 }
 
-export function readBatch(batch) {
-    return {type: types.READ_BATCH, batch}
+export function readBatch(uuid, batch) {
+    return {type: types.READ_BATCH, uuid, batch}
 }
 
-export function startReadStep(uuid, serviceUUID, writeUUID) {
-    const data = stringToBytes('W');
-    return writeData(uuid, serviceUUID, writeUUID, types.START_READ_STEP, data);
+export function startReadStep(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startReadStep(uuid)
+            .then(()=>{
+                dispatch({type: types.START_READ_STEP, uuid})
+            })
+    }
 }
 
-export function readStep(step) {
-    return {type: types.READ_STEP, step}
+export function readStep(uuid, step) {
+    return {type: types.READ_STEP, uuid, step}
 }

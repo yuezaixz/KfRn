@@ -1,0 +1,1 @@
+export const uploadRecord = 'https://service.runmaf.com/services/mobile/other/adjustRecord';
