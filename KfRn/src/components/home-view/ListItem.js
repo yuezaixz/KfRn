@@ -20,7 +20,7 @@ class ListItem extends Component {
             return;
         }
         this.props.actions.stopSearchDevice()
-        this.props.actions.startDeviceConnect(this.props.data, this.props.home_data.leftDevice == null ? 1 : 2 );
+        this.props.actions.startDeviceConnect(this.props.data, this.props.home_data.leftDevice == null );
     }
     render() {
         return (

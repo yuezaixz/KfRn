@@ -26,6 +26,7 @@ export function stopSearchDevice() {
 
 export function startDeviceConnect(device, isLeft) {
     stopSearchDevice()//连接前停止搜索
+    console.log("开始连接"+isLeft?"左":"右")
     return async (dispatch, getState) =>{
         dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid, isLeft})
         DeviceManager.ShareInstance().startDeviceConnect(device, isLeft)

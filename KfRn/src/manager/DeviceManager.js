@@ -264,10 +264,7 @@ export default class DeviceManager{
         return true
     }
 
-    startDeviceConnect(device, type) {
-        if (type <= 0) {
-            throw new Error("类型错误")
-        }
+    startDeviceConnect(device, isLeft) {
         this.stopSearchDevice()//连接前停止搜索
         this.isLoseConnecting = false
         return new Promise((resolve, reject) => {
@@ -292,7 +289,7 @@ export default class DeviceManager{
                             if (notifyCharacteristic && writeCharacteristic) {
                                 BleManager.startNotification(device.uuid, BleUUIDs.PODOON_SERVICE_UUID, notifyCharacteristic)
                                     .then(() => {
-                                        if (type == 1) {
+                                        if (isLeft) {
                                             this.leftDevice = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
                                                 noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
                                             resolve(this.leftDevice)
