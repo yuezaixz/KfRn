@@ -10,6 +10,7 @@
     "convert-string": "^0.1.0",
     "react": "16.2.0",
     "react-native": "^0.52.2",
+    "react-art": "^16.2.0",
     "react-native-blue-manager": "https://github.com/innoveit/react-native-ble-manager.git",
     "react-native-simple-modal": "^7.0.0",
     "react-native-tab-navigator": "^0.3.4",

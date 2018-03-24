@@ -9,40 +9,13 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View,
-    NativeEventEmitter,
+  View
 } from 'react-native';
-import BleManager from 'react-native-ble-manager';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import HeatView from './src/components/common/HeatView'
 
 export default class App extends Component<{}> {
   componentDidMount() {
-      var that = this
-      BleManager.start({showAlert: false})
-          .then(() => {
-              // Success code
-              console.log('Module initialized');
-              that.startScan()
-          });
   }
-    startScan() {
-        BleManager.scan([], 3, true).then((results) => {
-            console.log('Scanning...');
-            setTimeout(function () {
-                BleManager.getDiscoveredPeripherals([])
-                    .then((peripheralsArray) => {
-                        // Success code
-                        console.log(peripheralsArray);
-                    });
-            },3000)
-        });
-    }
   render() {
     return (
       <View style={styles.container}>
@@ -52,9 +25,7 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>
           To get started, edit App.js
         </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+          <HeatView/>
       </View>
     );
   }

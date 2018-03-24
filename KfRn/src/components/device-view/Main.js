@@ -7,6 +7,7 @@ import {
     Dimensions
 } from 'react-native';
 import {Theme} from "../../styles";
+import HeatView from "../../components/common/HeatView"
 
 import NotificationCenter from '../../public/Com/NotificationCenter/NotificationCenter'
 
@@ -151,6 +152,7 @@ class Main extends Component {
                         </View>
                     </TouchableHighlight>
                 </View>
+                <HeatView/>
             </View>
         );
     }
