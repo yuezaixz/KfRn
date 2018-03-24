@@ -34,8 +34,9 @@ class DeviceView extends Component {
 
     _backAction(){
         console.log('backAction')
-        this.props.actions.deviceDisconnect(this.props.device_data.uuid)
-        this.props.actions.clearDeviceData()
+        this.props.actions.deviceDisconnect(this.props.device_data.leftDevice.uuid)
+        this.props.actions.deviceDisconnect(this.props.device_data.rightDevice.uuid)
+        // this.props.actions.clearDeviceData()
         setTimeout(()=>{this.props.navigation.pop()},100)
     }
 
@@ -71,18 +72,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        device_data: {...state.device,
-            uuid:state.home.uuid,
-            name:state.home.name,
-            serviceUUID:state.home.serviceUUID,
-            noitfyUUID:state.home.noitfyUUID,
-            writeUUID:state.home.writeUUID,
-            other_uuid:state.home.other_uuid,
-            other_name:state.home.other_name,
-            other_serviceUUID:state.home.other_serviceUUID,
-            other_noitfyUUID:state.home.other_noitfyUUID,
-            other_writeUUID:state.home.other_writeUUID
-        }
+        device_data: {...state.home}
     };
 }
 

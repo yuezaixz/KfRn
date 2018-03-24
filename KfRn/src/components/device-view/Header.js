@@ -15,7 +15,10 @@ class Header extends Component {
         return (
             <View style={styles.container}>
                 <Text style={[styles.text, styles.title]}>
-                    {this.props.device_data.name}:{this.props.device_data.uuid}
+                    {this.props.device_data.leftDevice.name}:{this.props.device_data.leftDevice.uuid}
+                </Text>
+                <Text style={[styles.text, styles.title]}>
+                    {this.props.device_data.rightDevice.name}:{this.props.device_data.rightDevice.uuid}
                 </Text>
             </View>
         );
@@ -33,7 +36,7 @@ const styles = StyleSheet.create({
     title: {
         width: width,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: 16
     }
 });
 

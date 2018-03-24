@@ -24,21 +24,16 @@ export function stopSearchDevice() {
     return {type: types.STOP_SEARCH_DEVICE}
 }
 
-export function startDeviceConnect(device) {
+export function startDeviceConnect(device, isLeft) {
     stopSearchDevice()//连接前停止搜索
     return async (dispatch, getState) =>{
-        dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid})
-        DeviceManager.ShareInstance().startDeviceConnect(device)
+        dispatch({type: types.START_DEVICE_CONNECT, uuid: device.uuid, isLeft})
+        DeviceManager.ShareInstance().startDeviceConnect(device, isLeft)
             .then((device)=>{
                 dispatch({
-                    type: types.SUCCESS_DEVICE_CONNECT,
-                    uuid: device.uuid,
-                    name: device.name,
-                    serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
-                    noitfyUUID: device.notifyCharacteristic,
-                    writeUUID: device.writeCharacteristic})
+                    type: types.SUCCESS_DEVICE_CONNECT, isLeft, device})
             }).catch(error => {
-                dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error})
+                dispatch({type: types.FAIL_DEVICE_CONNECT, errorMsg: error, isLeft})
             })
         }
 }

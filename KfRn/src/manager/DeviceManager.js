@@ -20,10 +20,11 @@ export default class DeviceManager{
     lastUpdateTime = 0;
     loopCallback = null;
     device_list = [];
-    left_device = null
-    right_device = null
+    leftDevice = null
+    rightDevice = null
 
     isLoseConnecting = false;
+    isLoseConnectingRight = false;
 
     constructor() {
         if (!instance) {
@@ -32,12 +33,22 @@ export default class DeviceManager{
         return instance;
     }
 
-    reconnect() {
+    reconnect(device) {
         console.log('开始重连')
         if (this.isLoseConnecting){
-            this.startDeviceConnect(this.left_device).then((device)=>{
+            this.startDeviceConnect(this.leftDevice).then((device)=>{
                 this.isLoseConnecting = true
-                NotificationCenter.post(NotificationCenter.name.search.reconnect)
+                NotificationCenter.post(NotificationCenter.name.search.reconnect, {uuid:device.uuid})
+            }).catch((error)=>{
+                console.log('重连失败')
+                setTimeout(this.reconnect.bind(this),3000)
+            })
+        }
+
+        if (this.isLoseConnectingRight){
+            this.startDeviceConnect(this.rightDevice).then((device)=>{
+                this.isLoseConnectingRight = true
+                NotificationCenter.post(NotificationCenter.name.search.reconnect, {uuid:device.uuid})
             }).catch((error)=>{
                 console.log('重连失败')
                 setTimeout(this.reconnect.bind(this),3000)
@@ -50,13 +61,22 @@ export default class DeviceManager{
         this.disconnectListener = bleManagerEmitter.addListener(
             'BleManagerDisconnectPeripheral',
             ((args) => {
-                if(this.left_device && this.left_device.uuid == args.peripheral) {
+                if(this.leftDevice && this.leftDevice.uuid == args.peripheral) {
                     //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
 
                     this.isLoseConnecting = true
-                    NotificationCenter.post(NotificationCenter.name.search.loseConnecting)
+                    NotificationCenter.post(NotificationCenter.name.search.loseConnecting, {uuid:args.peripheral})
 
-                    this.reconnect()
+                    this.reconnect(this.leftDevice)
+                }
+
+                if(this.rightDevice && this.rightDevice.uuid == args.peripheral) {
+                    //TODO 断开时候，要先设置状态，让DeviceView和AdjustView显示重连中
+
+                    this.isLoseConnectingRight = true
+                    NotificationCenter.post(NotificationCenter.name.search.loseConnecting, {uuid:args.peripheral})
+
+                    this.reconnect(this.rightDevice)
                 }
             }).bind(this)
         );
@@ -74,32 +94,24 @@ export default class DeviceManager{
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
         console.log(dataStr)
-        var type = 0;
-        if (this.left_device.uuid == data.peripheral) {
-            type = 1
-        } else if (this.right_device.uuid == data.peripheral) {
-            type = 2
-        }
 
-        if (type > 0) {
-            if (datas[0] == 1) {
-                NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {type, point1:datas[1], point2:datas[2], point3:datas[3]})
-            } else if (datas[0] == 80 && datas[1] == 78) {
-                var batch = dataStr.substring(3)
-                NotificationCenter.post(NotificationCenter.name.deviceData.batch, {type, batch})
-            } else if (datas[0] == 86) {
-                var version = dataStr.substring(3)
-                NotificationCenter.post(NotificationCenter.name.deviceData.readVersion, {type, version})
-            } else if (datas[0] == 68) {
-                var step = parseInt(dataStr.substring(3))
-                NotificationCenter.post(NotificationCenter.name.deviceData.readStep, {type, step})
-            } else if (util.startWith(dataStr, "Batt")) {
-                var voltage = dataStr.substring(5)
-                NotificationCenter.post(NotificationCenter.name.deviceData.voltage, {type, voltage})
-            } else if (util.startWith(dataStr, "M")) {
-                var macAddress = dataStr.substring(2)
-                NotificationCenter.post(NotificationCenter.name.deviceData.readMacAddress, {type, macAddress})
-            }
+        if (datas[0] == 1) {
+            NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {uuid:data.peripheral, point1:datas[1], point2:datas[2], point3:datas[3]})
+        } else if (datas[0] == 80 && datas[1] == 78) {
+            var batch = dataStr.substring(3)
+            NotificationCenter.post(NotificationCenter.name.deviceData.batch, { uuid:data.peripheral, type, batch})
+        } else if (datas[0] == 86) {
+            var version = dataStr.substring(3)
+            NotificationCenter.post(NotificationCenter.name.deviceData.readVersion, { uuid:data.peripheral, type, version})
+        } else if (datas[0] == 68) {
+            var step = parseInt(dataStr.substring(3))
+            NotificationCenter.post(NotificationCenter.name.deviceData.readStep, { uuid:data.peripheral, type, step})
+        } else if (util.startWith(dataStr, "Batt")) {
+            var voltage = dataStr.substring(5)
+            NotificationCenter.post(NotificationCenter.name.deviceData.voltage, { uuid:data.peripheral, type, voltage})
+        } else if (util.startWith(dataStr, "M")) {
+            var macAddress = dataStr.substring(2)
+            NotificationCenter.post(NotificationCenter.name.deviceData.readMacAddress, { uuid:data.peripheral, type, macAddress})
         }
 
     }
@@ -130,40 +142,51 @@ export default class DeviceManager{
 
     //API
 
-    startCheckVoltage() {
-        return this.writeData('BR', 1)
+    typeByUUID(uuid) {
+        if (uuid === this.leftDevice.uuid) {
+            return 1
+        } else if (uuid === this.rightDevice.uuid) {
+            return 1
+        }
+        return 0
     }
 
-    startReadVoltage() {
-        return this.writeData('BG', 1)
-    }
-    startReadVersion() {
-        return this.writeData('VN', 1)
+    startCheckVoltage(uuid) {
+        return this.writeData('BR', this.typeByUUID(uuid))
     }
 
-    startReadStep() {
-        return this.writeData('W', 1)
+    startReadVoltage(uuid) {
+        return this.writeData('BG', this.typeByUUID(uuid))
+    }
+    startReadVersion(uuid) {
+        return this.writeData('VN', this.typeByUUID(uuid))
     }
 
-    startReadMacAddress() {
-        return this.writeData('GM', 1)
+    startReadStep(uuid) {
+        return this.writeData('W', this.typeByUUID(uuid))
     }
 
-    startReadBatch() {
-        return this.writeData('GS', 1)
+    startReadMacAddress(uuid) {
+        return this.writeData('GM', this.typeByUUID(uuid))
     }
 
-    startReadInsoleData() {
+    startReadBatch(uuid) {
+        return this.writeData('GS', this.typeByUUID(uuid))
+    }
+
+    startReadInsoleData(uuid) {
+        let type = this.typeByUUID(uuid)
         return new Promise((resolve, reject) => {
-            this.writeData('E', 1)
+            this.writeData('E', type)
 
             resolve()
         });
     }
 
-    stopReadInsoleData() {
+    stopReadInsoleData(uuid) {
+        let type = this.typeByUUID(uuid)
         return new Promise((resolve, reject) => {
-            this.writeData('D', 1)
+            this.writeData('D', type)
 
             resolve()
         });
@@ -270,13 +293,13 @@ export default class DeviceManager{
                                 BleManager.startNotification(device.uuid, BleUUIDs.PODOON_SERVICE_UUID, notifyCharacteristic)
                                     .then(() => {
                                         if (type == 1) {
-                                            this.left_device = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
+                                            this.leftDevice = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
                                                 noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
-                                            resolve(this.left_device)
+                                            resolve(this.leftDevice)
                                         } else {
-                                            this.right_device = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
+                                            this.rightDevice = {...device, serviceUUID:BleUUIDs.PODOON_SERVICE_UUID,
                                                 noitfyUUID: notifyCharacteristic, writeUUID: writeCharacteristic}
-                                            resolve(this.right_device)
+                                            resolve(this.rightDevice)
                                         }
                                     })
                                     .catch((error) => {
@@ -295,10 +318,10 @@ export default class DeviceManager{
         });
     }
 
-    deviceDisconnect(type) {
+    deviceDisconnect(uuid) {
+        let type = this.typeByUUID(uuid)
         return new Promise((resolve, reject) => {
-
-            let currentDevice = type == 1 ? this.left_device : this.right_device
+            let currentDevice = type == 1 ? this.leftDevice : this.rightDevice
             if (type <= 0) {
                 reject(new Error("类型错误"))
             } else if (!currentDevice) {
@@ -323,7 +346,7 @@ export default class DeviceManager{
         if (type > 0) {
             console.log(command)
             const data = stringToBytes(command);
-            let current_device = type == 1 ? this.left_device : this.right_device
+            let current_device = type == 1 ? this.leftDevice : this.rightDevice
             return new Promise((resolve, reject) => {
                 if (current_device) {
                     BleManager.write(current_device.uuid, current_device.serviceUUID, current_device.writeUUID, data)
