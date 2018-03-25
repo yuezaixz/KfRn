@@ -17,11 +17,19 @@ class HeatView extends Component {
         super(props);
     }
 
+    setLeftValue(point1, point2, point3) {
+        return this.refs['leftFoot'].setValue(point1, point2, point3)
+    }
+
+    setRightValue(point1, point2, point3) {
+        return this.refs['rightFoot'].setValue(point1, point2, point3)
+    }
+
     render() {
         return(
             <View style={styles.container}>
-                <SingleFootView isRight={false}/>
-                <SingleFootView isRight={true} />
+                <SingleFootView ref={'leftFoot'}  isRight={false}/>
+                <SingleFootView ref={'rightFoot'} isRight={true} />
             </View>
         );
     }

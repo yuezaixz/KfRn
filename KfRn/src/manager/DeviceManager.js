@@ -90,10 +90,12 @@ export default class DeviceManager{
     handleUpdateValueForCharacteristic(data) {
         //TODO 返回值用listener吧，电量的写好了，待测试
 
-        console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        console.log(dataStr)
+        if (datas[0] != 1) {
+            console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
+            console.log(dataStr)
+        }
 
         if (datas[0] == 1) {
             NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {uuid:data.peripheral, point1:datas[1], point2:datas[2], point3:datas[3]})
