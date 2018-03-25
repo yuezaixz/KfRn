@@ -95,7 +95,7 @@ export default class SingleFootView extends Component<Props> {
         Animated.parallel([
             Animated.timing(_value1, {
                 duration: 100,
-                toValue: point1
+                toValue: point1 //划重点：toValue 是number，不要用Animated.Value对象了
             }),
             Animated.timing(_value2, {
                 duration: 100,
@@ -110,7 +110,7 @@ export default class SingleFootView extends Component<Props> {
             this.isAnimation = false
         });
 
-        this.setState(this.state);
+        this.setState(this.state);//划重点：这个必须设置，否则动画不会触发setState
     }
 
     _handleAddFirework = (e) => {
