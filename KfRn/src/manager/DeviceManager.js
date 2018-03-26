@@ -90,10 +90,14 @@ export default class DeviceManager{
     handleUpdateValueForCharacteristic(data) {
         //TODO 返回值用listener吧，电量的写好了，待测试
 
-        console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
         var datas = data.value
         var dataStr = util.arrayBufferToBase64Str(datas)
-        console.log(dataStr)
+        if (datas[0] != 1) {
+            console.log('Received data from ' + data.peripheral + ' text ' + data.text + ' characteristic ' + data.characteristic, data.value);
+            console.log(dataStr)
+        }
+
+        let type = this.typeByUUID(data.peripheral)
 
         if (datas[0] == 1) {
             NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {uuid:data.peripheral, point1:datas[1], point2:datas[2], point3:datas[3]})
@@ -340,25 +344,24 @@ export default class DeviceManager{
     }
 
     writeData(command, type) {
-        if (type > 0) {
-            console.log(command)
-            const data = stringToBytes(command);
-            let current_device = type == 1 ? this.leftDevice : this.rightDevice
-            return new Promise((resolve, reject) => {
-                if (current_device) {
-                    BleManager.write(current_device.uuid, current_device.serviceUUID, current_device.writeUUID, data)
-                        .then(() => {
-                            resolve()
-                        })
-                        .catch((error) => {
-                            reject(error)
-                        });
-                } else {
-                    reject(new Error("未连接设备"))
-                }
-            });
-
-        }
+        console.log(command)
+        const data = stringToBytes(command);
+        let current_device = type == 1 ? this.leftDevice : this.rightDevice
+        return new Promise((resolve, reject) => {
+            if (type == 0) {
+                reject(new Error("UUID错误"))
+            } else if (current_device) {
+                BleManager.write(current_device.uuid, current_device.serviceUUID, current_device.writeUUID, data)
+                    .then(() => {
+                        resolve()
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    });
+            } else {
+                reject(new Error("未连接设备"))
+            }
+        });
     }
 
 }

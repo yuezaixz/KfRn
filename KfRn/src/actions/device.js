@@ -29,7 +29,7 @@ export function startCheckVoltage(uuid) {
 
 export function startReadVoltage(uuid) {
     return async (dispatch, getState) =>{
-        DeviceManager.ShareInstance().startReadVoltage()
+        DeviceManager.ShareInstance().startReadVoltage(uuid)
             .then(()=>{
                 dispatch({type: types.START_READ_VOLTAGE, uuid})
             })
@@ -42,7 +42,7 @@ export function readVoltage(uuid, voltage) {
 
 export function startReadMacAddress(uuid) {
     return async (dispatch, getState) =>{
-        DeviceManager.ShareInstance().startReadMacAddress()
+        DeviceManager.ShareInstance().startReadMacAddress(uuid)
             .then(()=>{
                 dispatch({type: types.START_READ_MAC_ADDRESS, uuid})
             })
@@ -80,6 +80,19 @@ export function readInsoleData(uuid, point1, point2, point3) {
 
 export function clearDeviceData(uuid) {
     return {type: types.CLEAR_DEVICE_DATA, uuid}
+}
+
+export function startReadVersion(uuid) {
+    return async (dispatch, getState) =>{
+        DeviceManager.ShareInstance().startReadVersion(uuid)
+            .then(()=>{
+                dispatch({type: types.START_READ_VERSION, uuid})
+            })
+    }
+}
+
+export function readVersion(uuid, version) {
+    return {type: types.READ_VERSION, uuid, version}
 }
 
 export function startReadBatch(uuid) {

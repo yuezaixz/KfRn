@@ -56,7 +56,13 @@ class Main extends Component {
 
     readInsoleData(data) {
         if (data.uuid) {
-            this.props.actions.readInsoleData(data.uuid, data.point1, data.point2, data.point3)
+            // this.props.actions.readInsoleData(data.uuid, data.point1, data.point2, data.point3)
+
+            if (data.uuid == this.props.device_data.leftDevice.uuid) {
+                this.refs['heatView'].setLeftValue(data.point1, data.point2, data.point3)
+            } else if (data.uuid == this.props.device_data.rightDevice.uuid) {
+                this.refs['heatView'].setRightValue(data.point1, data.point2, data.point3)
+            }
         }
         this.props.getLoading().dismiss()
     }
@@ -152,7 +158,7 @@ class Main extends Component {
                         </View>
                     </TouchableHighlight>
                 </View>
-                <HeatView/>
+                <HeatView ref={'heatView'} />
             </View>
         );
     }
