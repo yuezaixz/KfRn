@@ -60,6 +60,8 @@ class Main extends Component {
 
             if (data.uuid == this.props.device_data.leftDevice.uuid) {
                 this.refs['heatView'].setLeftValue(data.point1, data.point2, data.point3)
+            } else if (data.uuid == this.props.device_data.rightDevice.uuid) {
+                this.refs['heatView'].setRightValue(data.point1, data.point2, data.point3)
             }
         }
         this.props.getLoading().dismiss()
