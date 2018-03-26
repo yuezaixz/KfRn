@@ -104,7 +104,8 @@ export const HEEL_MIDDLE_LEFT = {
     end_x:27,
     end_y:137,
     scale:new Animated.Value(0),
-    fill:'rgba(245,166,35,1)'
+    fill:'rgba(245,166,35,1)',
+    type:13
 }
 
 export const EAR_MIDDLE_LEFT = {
@@ -115,6 +116,7 @@ export const EAR_MIDDLE_LEFT = {
     start_y:82,
     end_x:9,
     end_y:64,
+    type:12
 }
 
 export const BALL_MIDDLE_LEFT = {
@@ -125,6 +127,7 @@ export const BALL_MIDDLE_LEFT = {
     start_y:69,
     end_x:47,
     end_y:54,
+    type:11
 }
 
 export const F1_MIDDLE_LEFT = {
@@ -135,6 +138,7 @@ export const F1_MIDDLE_LEFT = {
     start_y:23,
     end_x:77,
     end_y:12,
+    type:11
 }
 
 export const F2_MIDDLE_LEFT = {
@@ -145,6 +149,7 @@ export const F2_MIDDLE_LEFT = {
     start_y:18,
     end_x:57,
     end_y:14,
+    type:14
 }
 
 export const F3_MIDDLE_LEFT = {
@@ -155,6 +160,7 @@ export const F3_MIDDLE_LEFT = {
     start_y:21.5,
     end_x:39,
     end_y:19.5,
+    type:14
 }
 
 export const HEEL_IN_LEFT = {
@@ -164,7 +170,8 @@ export const HEEL_IN_LEFT = {
     end_x:34,
     end_y:168,
     scale:new Animated.Value(0),
-    fill:'rgba(208,2,27,1)'
+    fill:'rgba(208,2,27,1)',
+    type:23
 }
 
 export const EAR_IN_LEFT = {
@@ -175,6 +182,7 @@ export const EAR_IN_LEFT = {
     start_y:83,
     end_x:17,
     end_y:71,
+    type:22
 }
 
 export const BALL_IN_LEFT = {
@@ -185,6 +193,7 @@ export const BALL_IN_LEFT = {
     start_y:68,
     end_x:54,
     end_y:60,
+    type:21
 }
 
 export const F1_IN_LEFT = {
@@ -195,4 +204,5 @@ export const F1_IN_LEFT = {
     start_y:23,
     end_x:81.5,
     end_y:18,
+    type:21
 }

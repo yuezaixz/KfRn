@@ -35,6 +35,8 @@ const FILL_COLORS = [
     'rgba(208,2,27,1)'
 ];
 
+const startValueConstants = [3, 20, 30]
+
 export default class SingleFootView extends Component<Props> {
     constructor(props) {
         super(props);
@@ -53,13 +55,11 @@ export default class SingleFootView extends Component<Props> {
 
         fireworks: [
             FootShape.HEEL_OUT_LEFT, FootShape.EAR_OUT_LEFT, FootShape.BALL_OUT_LEFT, FootShape.F1_OUT_LEFT,
-            FootShape.F2_OUT_LEFT, FootShape.F3_OUT_LEFT, FootShape.F4_OUT_LEFT, FootShape.F5_OUT_LEFT
-        ],
-        middleFireworks : [
+            FootShape.F2_OUT_LEFT, FootShape.F3_OUT_LEFT, FootShape.F4_OUT_LEFT, FootShape.F5_OUT_LEFT,
             FootShape.HEEL_MIDDLE_LEFT, FootShape.EAR_MIDDLE_LEFT, FootShape.BALL_MIDDLE_LEFT, FootShape.F1_MIDDLE_LEFT,
-            FootShape.F2_MIDDLE_LEFT, FootShape.F3_MIDDLE_LEFT
+            FootShape.F2_MIDDLE_LEFT, FootShape.F3_MIDDLE_LEFT, FootShape.HEEL_IN_LEFT, FootShape.EAR_IN_LEFT,
+            FootShape.BALL_IN_LEFT, FootShape.F1_IN_LEFT
         ],
-        inFireworks : [FootShape.HEEL_IN_LEFT, FootShape.EAR_IN_LEFT, FootShape.BALL_IN_LEFT, FootShape.F1_IN_LEFT]
     }
 
     test(value) {
@@ -133,6 +133,8 @@ export default class SingleFootView extends Component<Props> {
         return this.state.fireworks.map((firework, i) => {
 
             let type = firework.type
+            let type1 = type % 10
+            let type2 = parseInt(type / 10)
 
             var _x = null
             var _y = null
@@ -140,21 +142,21 @@ export default class SingleFootView extends Component<Props> {
 
 
             // console.log(this.state.value2.__getValue())
-            switch(type) {
+            switch(type1) {
                 case 1:
                 {
                     _x = this.state.value1.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_x, firework.end_x],
                         extrapolate: 'clamp'
                     });
                     _y = this.state.value1.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_y, firework.end_y],
                         extrapolate: 'clamp'
                     });
                     _scale = this.state.value1.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [0, 1],
                         extrapolate: 'clamp'
                     });
@@ -163,17 +165,17 @@ export default class SingleFootView extends Component<Props> {
                 case 2:
                 {
                     _x = this.state.value2.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_x, firework.end_x],
                         extrapolate: 'clamp'
                     });
                     _y = this.state.value2.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_y, firework.end_y],
                         extrapolate: 'clamp'
                     });
                     _scale = this.state.value2.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [0, 1],
                         extrapolate: 'clamp'
                     });
@@ -182,17 +184,17 @@ export default class SingleFootView extends Component<Props> {
                 case 3:
                 {
                     _x = this.state.value3.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_x, firework.end_x],
                         extrapolate: 'clamp'
                     });
                     _y = this.state.value3.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_y, firework.end_y],
                         extrapolate: 'clamp'
                     });
                     _scale = this.state.value3.interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [0, 1],
                         extrapolate: 'clamp'
                     });
@@ -202,17 +204,17 @@ export default class SingleFootView extends Component<Props> {
                 {
 
                     _x = new Animated.Value((this.state.value1.__getValue()+this.state.value2.__getValue())/2).interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_x, firework.end_x],
                         extrapolate: 'clamp'
                     });
                     _y = new Animated.Value((this.state.value1.__getValue()+this.state.value2.__getValue())/2).interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [firework.start_y, firework.end_y],
                         extrapolate: 'clamp'
                     });
                     _scale = new Animated.Value((this.state.value1.__getValue()+this.state.value2.__getValue())/2).interpolate({
-                        inputRange: [3, 50],
+                        inputRange: [startValueConstants[type2], 50],
                         outputRange: [0, 1],
                         extrapolate: 'clamp'
                     });
