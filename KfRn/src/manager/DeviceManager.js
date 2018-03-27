@@ -99,8 +99,19 @@ export default class DeviceManager{
 
         let type = this.typeByUUID(data.peripheral)
 
-        if (datas[0] == 1) {
-            NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {uuid:data.peripheral, point1:datas[1], point2:datas[2], point3:datas[3]})
+        if (datas[0] == 1 && datas.length == 20) {
+            var index = 1
+            NotificationCenter.post(NotificationCenter.name.deviceData.readInsoleData, {
+                uuid:data.peripheral,
+                insoleDatas:[
+                    [datas[index++],datas[index++],datas[index++]],
+                    [datas[index++],datas[index++],datas[index++]],
+                    [datas[index++],datas[index++],datas[index++]],
+                    [datas[index++],datas[index++],datas[index++]],
+                    [datas[index++],datas[index++],datas[index++]],
+                    datas[18]*256+datas[19]
+                ]
+            })
         } else if (datas[0] == 80 && datas[1] == 78) {
             var batch = dataStr.substring(3)
             NotificationCenter.post(NotificationCenter.name.deviceData.batch, { uuid:data.peripheral, type, batch})

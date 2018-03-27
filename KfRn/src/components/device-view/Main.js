@@ -57,11 +57,11 @@ class Main extends Component {
     readInsoleData(data) {
         if (data.uuid) {
             // this.props.actions.readInsoleData(data.uuid, data.point1, data.point2, data.point3)
-
+            let insolePoint = data.insoleDatas[0]
             if (data.uuid == this.props.device_data.leftDevice.uuid) {
-                this.refs['heatView'].setLeftValue(data.point1, data.point2, data.point3)
+                this.refs['heatView'].setLeftValue(insolePoint[0], insolePoint[1], insolePoint[2])
             } else if (data.uuid == this.props.device_data.rightDevice.uuid) {
-                this.refs['heatView'].setRightValue(data.point1, data.point2, data.point3)
+                this.refs['heatView'].setRightValue(insolePoint[0], insolePoint[1], insolePoint[2])
             }
         }
         this.props.getLoading().dismiss()
