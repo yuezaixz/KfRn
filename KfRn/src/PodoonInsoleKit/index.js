@@ -6,10 +6,14 @@ class PodoonInsoleKit {
     //TODO 状态要记录下来，时效性，时间太长则重置
     state = {
         step : 0,
-        left_state : {
+        leftState : {
+            lastIndex: -1,
+            step: 0,
 
         },
-        right_state : {
+        rightState : {
+            lastIndex: -1,
+            step: 0,
 
         }
     }
@@ -26,8 +30,6 @@ class PodoonInsoleKit {
         return instance;
     }
 
-    count = 0
-
     clearState () {
         //todo 清空基础状态
     }
@@ -37,7 +39,30 @@ class PodoonInsoleKit {
     }
 
     putDatas(datas, rightDatas) {
-        this.count ++
+        let leftState = this.state.leftState
+        let rightState = this.state.rightState
+        this.handleInsoleData(leftState, datas)
+        this.handleInsoleData(rightState, rightDatas)
+    }
+
+    handleInsoleData(currentState, datas) {
+        currentState.lastIndex = datas[5]
+
+        this.beforeParse(currentState, datas)
+        this.parse(currentState, datas)
+        this.afterParse(currentState, datas)
+    }
+
+    beforeParse(currentState, datas) {
+
+    }
+
+    parse(currentState, datas) {
+
+    }
+
+    afterParse(currentState, datas) {
+
     }
 
     //Datas api
