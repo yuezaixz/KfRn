@@ -19,8 +19,10 @@ class PodoonInsoleKit {
         return instance;
     }
 
-    putDatas(datas) {
-        
+    count = 0
+
+    putDatas(datas, rightDatas) {
+        this.count ++
     }
 
     //Datas api
